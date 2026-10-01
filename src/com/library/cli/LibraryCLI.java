@@ -3,19 +3,23 @@ package com.library.cli;
 import java.util.List;
 import java.util.Scanner;
 
+import com.library.collections.DanhSachSach;
+import com.library.collections.DanhSachThanhVien;
+import com.library.collections.DanhSachMuonTra;
+import com.library.collections.DanhSachPhat;
 import com.library.enums.BookFormat;
 import com.library.models.*;
 import com.library.notifications.Notification;
 import com.library.services.DataStorageService;
 import com.library.services.Library;
 import com.library.services.SampleDataLoader;
+import com.library.services.TextFileStorageService;
 import com.library.users.Member;
 import com.library.utils.IdGenerator;
 
 /**
  * Giao dien Dong lenh (CLI Interactive Menu) cho Do an Quan ly Thu vien OOP.
- * Toan bo van ban duoc chuan hoa Tieng Viet khong dau, khong dung emoji
- * de tranh bi loi font chu '?' tren Windows Command Prompt.
+ * Toan bo van ban duoc chuan hoa Tieng Viet khong dau de khong bi loi font tren Windows CMD.
  */
 public class LibraryCLI {
     private final Library library;
@@ -36,7 +40,7 @@ public class LibraryCLI {
         while (true) {
             printBanner();
             printMainMenu();
-            System.out.print(">> Nhap lua chon cua ban (0 - 8): ");
+            System.out.print(">> Nhap lua chon cua ban (0 - 9): ");
             String choice = scanner.nextLine().trim();
 
             switch (choice) {
@@ -64,9 +68,12 @@ public class LibraryCLI {
                 case "8":
                     menuNotifications();
                     break;
+                case "9":
+                    menuArrayAndTextFiles();
+                    break;
                 case "0":
                     DataStorageService.saveData(library);
-                    System.out.println("\n[+] Da luu toan bo du lieu. Tam biet!\n");
+                    System.out.println("\n[+] Da luu toan bo du lieu ra file. Tam biet!\n");
                     return;
                 default:
                     System.out.println("\n[-] Lua chon khong hop le. Vui long thu lai!\n");
@@ -90,6 +97,7 @@ public class LibraryCLI {
         System.out.println(" 6. Quan ly thanh vien & Cap the thu vien (Member & Library Card - R5, R6)");
         System.out.println(" 7. Quan ly & Thu tien phat qua han (Fine Management - R15)");
         System.out.println(" 8. Hop thu thong bao qua han / Dat sach (Notifications - R12)");
+        System.out.println(" 9. [OOP] Thao tac Mang Doi Tuong & Doc/Ghi File Text (Array & Text Files)");
         System.out.println(" 0. Luu du lieu & Thoat chuong trinh");
         System.out.println("------------------------------------------------------------------------");
     }
@@ -324,6 +332,71 @@ public class LibraryCLI {
             int count = library.checkOverdueBooksAndNotify();
             DataStorageService.saveData(library);
             System.out.println("[+] Da gui thong bao cho " + count + " luot muon qua han.");
+        }
+    }
+
+    // MENU OOP: MANG DOI TUONG & DOC/GHI FILE TEXT
+    private void menuArrayAndTextFiles() {
+        System.out.println("\n--- [9] THAO TAC LOP MANG DOI TUONG (ARRAY) & DOC/GHI FILE TEXT ---");
+        System.out.println("1. Xuat mang DanhSachSach (BookItem[]) & Thong ke");
+        System.out.println("2. Nhap n cuon sach moi vao mang DanhSachSach");
+        System.out.println("3. Xuat mang DanhSachThanhVien (Member[])");
+        System.out.println("4. Xuat mang DanhSachMuonTra (BookLending[])");
+        System.out.println("5. Xuat mang DanhSachPhat (Fine[])");
+        System.out.println("6. Ghi toan bo du lieu ra tap tin Text (.txt)");
+        System.out.println("7. Doc du lieu tu tap tin Text (.txt) vao he thong");
+        System.out.println("0. Quay lai Menu chinh");
+        System.out.print(">> Chon: ");
+        String sub = scanner.nextLine().trim();
+
+        DanhSachSach dsSach = new DanhSachSach(library.getCatalog().getAllBookItems().toArray(new BookItem[0]));
+        DanhSachThanhVien dsTV = new DanhSachThanhVien(library.getAllMembers().size());
+        dsTV.themK(library.getAllMembers().toArray(new Member[0]));
+        DanhSachMuonTra dsMT = new DanhSachMuonTra(library.getLendings().size());
+        dsMT.themK(library.getLendings().toArray(new BookLending[0]));
+        DanhSachPhat dsPhat = new DanhSachPhat(library.getFines().size());
+        dsPhat.themK(library.getFines().toArray(new Fine[0]));
+
+        switch (sub) {
+            case "1":
+                dsSach.xuatDanhSach();
+                System.out.println("\n* Thong ke theo The loai trong mang: " + dsSach.thongKeTheoTheLoai());
+                System.out.println("* Thong ke theo Trang thai trong mang: " + dsSach.thongKeTheoTrangThai());
+                break;
+            case "2":
+                System.out.print("Nhap so luong n cuon sach muon them vao mang: ");
+                try {
+                    int n = Integer.parseInt(scanner.nextLine().trim());
+                    dsSach.nhapDanhSach(n, scanner);
+                    for (BookItem item : dsSach.getDanhSach()) {
+                        library.getCatalog().addBookItem(item);
+                    }
+                    DataStorageService.saveData(library);
+                } catch (Exception e) {
+                    System.out.println("[-] So luong khong hop le!");
+                }
+                break;
+            case "3":
+                dsTV.xuatDanhSach();
+                break;
+            case "4":
+                dsMT.xuatDanhSach();
+                System.out.println("* So luot muon qua han trong mang: " + dsMT.thongKeSoLuotQuaHan());
+                break;
+            case "5":
+                dsPhat.xuatDanhSach();
+                System.out.printf("* Tong tien phat: %,.0f VND | Chua thu: %,.0f VND\n",
+                        dsPhat.thongKeTongTienPhat(), dsPhat.thongKeTienPhatChuaThu());
+                break;
+            case "6":
+                TextFileStorageService.exportToTextFiles(library);
+                break;
+            case "7":
+                TextFileStorageService.importFromTextFiles(library);
+                DataStorageService.saveData(library);
+                break;
+            default:
+                break;
         }
     }
 }
