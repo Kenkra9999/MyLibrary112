@@ -10,7 +10,7 @@
 
 | STT | Tiêu chí chấm điểm của Giảng viên | Thang điểm | Hiện thực chi tiết trong mã nguồn đồ án | Đánh giá |
 | :---: | :--- | :---: | :--- | :---: |
-| **1** | **Có ít nhất 15 class** | **1.0 đ** | Tổng cộng **> 35 classes** (Enums, Models, Users, Search, Collections, Notifications, Services, Utils, GUI Panels, Dialogs, CLI, Main). | ✅ Đạt tối đa (35/15) |
+| **1** | **Có ít nhất 15 class** | **1.0 đ** | Tổng cộng **> 35 classes** (Enums, Models, Users, Search, Collections, Notifications, Services, Utils, CLI, Main). | ✅ Đạt tối đa (35/15) |
 | **2** | **Các lớp có hàm thiết lập (constructor)** | **1.0 đ** | Tất cả các lớp đều có Constructor mặc định (no-args) và Constructor có tham số để khởi tạo và nạp dữ liệu. | ✅ Đạt tối đa |
 | **3** | **Có kế thừa hợp lý (Inheritance)** | **1.0 đ** | `User` $\rightarrow$ `Member`, `Librarian`<br>`Book` $\rightarrow$ `BookItem`<br>`Person` $\rightarrow$ `Author`<br>`Notification` $\rightarrow$ `EmailNotification`, `PostalNotification` | ✅ Đạt tối đa |
 | **4** | **Cài đặt và sử dụng đa hình (Polymorphism)** | **1.0 đ** | - Triển khai interface `Search` và `IDanhSach`<br>- Ghi đè phương thức trừu tượng `User.getRole()`, `Notification.sendNotification()`<br>- Ghi đè `toString()`, `equals()`, `hashCode()` | ✅ Đạt tối đa |
@@ -19,7 +19,7 @@
 | **7** | **Thuộc tính static, phương thức static** | **1.0 đ** | - Lớp `Constants` chứa hằng số hệ thống `public static final`<br>- Lớp `IdGenerator` sinh mã định danh tự động với `AtomicLong`<br>- Lớp `DateUtils` chứa các hàm tiện ích định dạng ngày tháng `static`<br>- Các phương thức static trong `DataStorageService`, `TextFileStorageService`, `SampleDataLoader` | ✅ Đạt tối đa |
 | **8** | **Lớp trừu tượng, hàm trừu tượng (abstract)** | **1.0 đ** | - `abstract class User` có hàm trừu tượng `public abstract String getRole();`<br>- `abstract class Notification` có hàm trừu tượng `public abstract boolean sendNotification();` | ✅ Đạt tối đa |
 | **9** | **Có Interface** | **1.0 đ** | - `interface Search` (tìm kiếm sách theo tựa đề, tác giả, chủ đề, ngày xuất bản)<br>- `interface IDanhSach<T>` (chuẩn hóa các thao tác mảng đối tượng: thêm, thêm $k$, sửa, xóa, tìm kiếm, xuất, đọc/ghi file text) | ✅ Đạt tối đa |
-| **10** | **Sáng tạo (Creative UI & Features)** | **1.0 đ** | - Giao diện đồ họa Swing hiện đại (Cards, KPI Dashboard, Dialogs)<br>- Giao diện dòng lệnh Terminal CLI chuyên nghiệp<br>- Tự động tính tiền phạt quá hạn và thông báo đa kênh<br>- Cơ chế lưu trữ nhị phân kết hợp Text File tự động | ✅ Đạt tối đa |
+| **10** | **Sáng tạo (Creative UI & Features)** | **1.0 đ** | - Giao diện dòng lệnh Terminal CLI chuyên nghiệp<br>- Tự động tính tiền phạt quá hạn và thông báo đa kênh<br>- Cơ chế lưu trữ nhị phân kết hợp Text File tự động | ✅ Đạt tối đa |
 
 ---
 
@@ -209,5 +209,4 @@ classDiagram
 ---
 
 ## 5. HƯỚNG DẪN CHẠY VÀ DEMO
-- **Chạy Giao diện Đồ họa (GUI):** Nhấp đúp vào [run.bat](file:///c:/DuAnMonHocCntt/DuANOpp/run.bat)
-- **Chạy Giao diện Dòng lệnh (CLI):** Nhấp đúp vào [run_cli.bat](file:///c:/DuAnMonHocCntt/DuANOpp/run_cli.bat) (Vào mục **[9]** để demo trực tiếp các thao tác trên mảng đối tượng và file text theo đúng yêu cầu chấm của giảng viên!).
+- **Chạy chương trình (Console):** Nhấp đúp vào [run_cli.bat](file:///c:/DuAnMonHocCntt/DuANOpp/run_cli.bat) (Vào mục **[9]** để demo trực tiếp các thao tác trên mảng đối tượng và file text theo đúng yêu cầu chấm của giảng viên!).

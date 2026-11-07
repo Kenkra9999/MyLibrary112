@@ -34,8 +34,8 @@ Dự án đồ án môn học Lập trình Hướng đối tượng (OOP) bằng
   - Quản lý danh sách biên lai phạt, theo dõi trạng thái đã thanh toán / chưa thanh toán và thực hiện thu phí.
 - **💾 Lưu Trữ Dữ Liệu Tự Động (Data Persistence):**
   - Tự động lưu và nạp trạng thái thư viện từ tệp dữ liệu `data/library_state.dat`.
-- **💻 Đa Dạng Giao Diện:**
-  - Hỗ trợ cả **Giao diện Đồ họa Hiện đại (Swing GUI)** và **Giao diện Console (CLI)**.
+- **💻 Giao diện Console:**
+  - Chạy hoàn toàn trên Terminal bằng Java (Console CLI).
 
 ---
 
@@ -47,16 +47,10 @@ Chạy tệp `build.bat` hoặc lệnh:
 .\build.bat
 ```
 
-### 2. Khởi chạy Giao diện Đồ họa (GUI)
-Chạy tệp `run.bat` hoặc lệnh:
+### 2. Khởi chạy chương trình (Console)
+Chạy tệp `run.bat` (hoặc `run_cli.bat`) hoặc lệnh:
 ```bash
 .\run.bat
-```
-
-### 3. Khởi chạy Giao diện Dòng lệnh (CLI)
-Chạy tệp `run_cli.bat` hoặc lệnh:
-```bash
-.\run_cli.bat
 ```
 
 ---
@@ -75,14 +69,13 @@ c:\DuAnMonHocCntt\DuANOpp\
 │       ├── notifications\                   # Phân cấp thông báo (Notification, Email, Postal)
 │       ├── services\                        # Tầng nghiệp vụ điều phối (Library, DataStorage, SampleData)
 │       ├── utils\                           # Hằng số (Constants), Tiện ích ngày tháng, Bộ sinh mã
-│       ├── gui\                             # Giao diện đồ họa hiện đại Swing (Panels, Theme, Dialogs)
 │       └── cli\                             # Giao diện tương tác Console Terminal
 ├── data\                                    # Nơi lưu trữ trạng thái dữ liệu
 ├── docs\
 │   └── BAO_CAO_DO_AN.md                     # Toàn bộ báo cáo đồ án chi tiết & Sơ đồ Mermaid UML
 ├── build.bat                                # Script biên dịch tự động
-├── run.bat                                  # Script chạy giao diện GUI
-├── run_cli.bat                              # Script chạy giao diện CLI
+├── run.bat                                  # Script chạy chương trình (Console)
+├── run_cli.bat                              # Script chạy chương trình (Console)
 └── README.md                                # Tài liệu hướng dẫn
 ```
 
