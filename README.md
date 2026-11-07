@@ -58,32 +58,34 @@ Chạy tệp `run.bat` (hoặc `run_cli.bat`) hoặc lệnh:
 ## 📂 CẤU TRÚC THƯ MỤC DỰ ÁN
 
 ```
-c:\DuAnMonHocCntt\DuANOpp\
+MyLibrary112\
 ├── src\
 │   └── com\library\
 │       ├── Main.java                        # Điểm khởi chạy ứng dụng
 │       ├── enums\                           # Enum trạng thái, định dạng sách
 │       ├── models\                          # Các thực thể dữ liệu (Book, BookItem, Rack, Card, Lending, Fine...)
 │       ├── users\                           # Phân cấp người dùng (User, Member, Librarian)
+│       ├── collections\                     # Lớp mảng đối tượng (DanhSachSach, DanhSachThanhVien...) & interface IDanhSach
 │       ├── search\                          # Giao diện Search & Triển khai Catalog
 │       ├── notifications\                   # Phân cấp thông báo (Notification, Email, Postal)
 │       ├── services\                        # Tầng nghiệp vụ điều phối (Library, DataStorage, SampleData)
 │       ├── utils\                           # Hằng số (Constants), Tiện ích ngày tháng, Bộ sinh mã
 │       └── cli\                             # Giao diện tương tác Console Terminal
-├── data\                                    # Nơi lưu trữ trạng thái dữ liệu
+├── data\                                    # library_state.dat (nhị phân) và các file .txt khi xuất dữ liệu
 ├── docs\
 │   └── BAO_CAO_DO_AN.md                     # Toàn bộ báo cáo đồ án chi tiết & Sơ đồ Mermaid UML
 ├── build.bat                                # Script biên dịch tự động
 ├── run.bat                                  # Script chạy chương trình (Console)
 ├── run_cli.bat                              # Script chạy chương trình (Console)
+├── run.ps1                                  # Script chạy bằng PowerShell
 └── README.md                                # Tài liệu hướng dẫn
 ```
 
 ---
 
 ## 📖 BÁO CÁO ĐỒ ÁN CHI TIẾT
-Vui lòng xem tài liệu chi tiết tại [docs/BAO_CAO_DO_AN.md](file:///c:/DuAnMonHocCntt/DuANOpp/docs/BAO_CAO_DO_AN.md) bao gồm:
-- Phân tích chi tiết 15 yêu cầu nghiệp vụ (R1 - R15).
-- Phân tích 4 tính chất OOP (Đóng gói, Kế thừa, Đa hình, Trừu tượng).
-- Biểu đồ UML (Class Diagram, Use Case Diagram, Sequence Diagrams).
-- Kịch bản kiểm thử (Test Cases) và hướng dẫn thuyết trình đồ án.
+Vui lòng xem tài liệu chi tiết tại [docs/BAO_CAO_DO_AN.md](docs/BAO_CAO_DO_AN.md) bao gồm:
+- Bảng đối chiếu 10 tiêu chí chấm điểm đồ án.
+- Thiết kế các lớp mảng đối tượng.
+- Sơ đồ lớp UML (Class Diagram).
+- Hướng dẫn trả lời câu hỏi vấn đáp, hướng dẫn chạy và demo.

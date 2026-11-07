@@ -10,8 +10,8 @@
 
 | STT | Tiêu chí chấm điểm của Giảng viên | Thang điểm | Hiện thực chi tiết trong mã nguồn đồ án | Đánh giá |
 | :---: | :--- | :---: | :--- | :---: |
-| **1** | **Có ít nhất 15 class** | **1.0 đ** | Tổng cộng **> 35 classes** (Enums, Models, Users, Search, Collections, Notifications, Services, Utils, CLI, Main). | ✅ Đạt tối đa (35/15) |
-| **2** | **Các lớp có hàm thiết lập (constructor)** | **1.0 đ** | Tất cả các lớp đều có Constructor mặc định (no-args) và Constructor có tham số để khởi tạo và nạp dữ liệu. | ✅ Đạt tối đa |
+| **1** | **Có ít nhất 15 class** | **1.0 đ** | Tổng cộng **31 class** (Models, Users, Notifications, Collections, Search, Services, Utils, CLI, Main), cùng với 4 enum và 2 interface. | ✅ Đạt tối đa (31/15) |
+| **2** | **Các lớp có hàm thiết lập (constructor)** | **1.0 đ** | Các lớp dữ liệu (`Book`, `Member`, `Fine`...) đều có constructor có tham số; các lớp mảng `DanhSach*` có nhiều constructor (mặc định, theo sức chứa, từ mảng có sẵn). Các lớp tiện ích tĩnh (`Main`, `DataStorageService`, `TextFileStorageService`, `SampleDataLoader`) dùng constructor mặc định. | ✅ Đạt tối đa |
 | **3** | **Có kế thừa hợp lý (Inheritance)** | **1.0 đ** | `User` $\rightarrow$ `Member`, `Librarian`<br>`Book` $\rightarrow$ `BookItem`<br>`Person` $\rightarrow$ `Author`<br>`Notification` $\rightarrow$ `EmailNotification`, `PostalNotification` | ✅ Đạt tối đa |
 | **4** | **Cài đặt và sử dụng đa hình (Polymorphism)** | **1.0 đ** | - Triển khai interface `Search` và `IDanhSach`<br>- Ghi đè phương thức trừu tượng `User.getRole()`, `Notification.sendNotification()`<br>- Ghi đè `toString()`, `equals()`, `hashCode()` | ✅ Đạt tối đa |
 | **5** | **Lớp mảng các đối tượng (Array)** | **2.0 đ** | Xây dựng các lớp mảng đối tượng chuyên biệt: `DanhSachSach` (`BookItem[]`), `DanhSachThanhVien` (`Member[]`), `DanhSachMuonTra` (`BookLending[]`), `DanhSachPhat` (`Fine[]`) với đầy đủ: Nhập $n$ phần tử, Xuất danh sách, Thêm 1/Thêm $k$ phần tử, Sửa/Xóa theo mã, Tìm kiếm chính xác & gần đúng, Thống kê số liệu. | ✅ Đạt tối đa (2.0/2.0) |
@@ -209,4 +209,4 @@ classDiagram
 ---
 
 ## 5. HƯỚNG DẪN CHẠY VÀ DEMO
-- **Chạy chương trình (Console):** Nhấp đúp vào [run_cli.bat](file:///c:/DuAnMonHocCntt/DuANOpp/run_cli.bat) (Vào mục **[9]** để demo trực tiếp các thao tác trên mảng đối tượng và file text theo đúng yêu cầu chấm của giảng viên!).
+- **Chạy chương trình (Console):** Nhấp đúp vào [run_cli.bat](../run_cli.bat) (Vào mục **[9]** để demo trực tiếp các thao tác trên mảng đối tượng và file text theo đúng yêu cầu chấm của giảng viên!).
