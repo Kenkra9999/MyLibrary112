@@ -1,12 +1,12 @@
 package com.library.notifications;
 
+import java.time.LocalDateTime;
 import com.library.models.Address;
 
 /**
  * Class PostalNotification ke thua tu Notification (Gui thong bao qua Buu dien).
  */
 public class PostalNotification extends Notification {
-    private static final long serialVersionUID = 1L;
 
     private Address address;
 
@@ -18,6 +18,18 @@ public class PostalNotification extends Notification {
     public PostalNotification(String content, String recipientMemberId, Address address) {
         super(content, recipientMemberId);
         this.address = address != null ? address : new Address();
+    }
+
+    /** Constructor day du - dung khi doc lai tu file text. */
+    public PostalNotification(String notificationId, LocalDateTime createdOn, String content,
+                              String recipientMemberId, boolean isSent, Address address) {
+        super(notificationId, createdOn, content, recipientMemberId, isSent);
+        this.address = address != null ? address : new Address();
+    }
+
+    @Override
+    public String getNoiNhanText() {
+        return address.toDongText();
     }
 
     public Address getAddress() {

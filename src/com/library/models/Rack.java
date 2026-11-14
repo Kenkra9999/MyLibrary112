@@ -1,13 +1,11 @@
 package com.library.models;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 /**
  * Class Rack bieu dien ke sach vat ly trong thu vien (Yeu cau R2).
  */
-public class Rack implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Rack {
 
     private int number;
     private String locationIdentifier;

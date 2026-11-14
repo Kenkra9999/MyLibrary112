@@ -1,8 +1,7 @@
 package com.library.utils;
 
 /**
- * Hang so cau hinh he thong Quan ly Thu vien (Library Management System).
- * Dap ung cac yeu cau nghiep vu R7, R8, R15.
+ * Hang so cau hinh he thong Quan ly Thu vien (public static final).
  */
 public final class Constants {
     private Constants() {}
@@ -13,15 +12,17 @@ public final class Constants {
     // R8: Thoi gian muon toi da cho moi cuon sach la 15 ngay
     public static final int MAX_LENDING_DAYS = 15;
 
-    // Gia han them ngay khi renew
+    // R11: So ngay duoc gia han them moi lan
     public static final int RENEW_EXTENSION_DAYS = 15;
 
-    // Phi phat tra muon cho moi ngay qua han (VND)
+    // Use case "Pay fine" (sang tao them): Phi phat tra muon cho moi ngay qua han (VND)
     public static final double FINE_PER_DAY = 5000.0;
 
-    // Ten thu vien mac dinh
-    public static final String DEFAULT_LIBRARY_NAME = "Thu Vien Trung Tam CNTT - Antigravity LMS";
+    // Ten va dia chi thu vien
+    public static final String DEFAULT_LIBRARY_NAME = "Thu Vien Cong Nghe & Tri Thuc CNTT";
+    public static final String DEFAULT_LIBRARY_STREET = "So 1 Dai Co Viet, Hai Ba Trung";
+    public static final String DEFAULT_LIBRARY_CITY = "Ha Noi";
 
-    // Duong dan luu tru du lieu
-    public static final String DATA_FILE_PATH = "data/library_state.dat";
+    // Mat khau mac dinh cap cho thanh vien moi
+    public static final String DEFAULT_MEMBER_PASSWORD = "123456";
 }

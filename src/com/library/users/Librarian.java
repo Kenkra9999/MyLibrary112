@@ -9,7 +9,6 @@ import com.library.models.Person;
  * Class Librarian dai dien cho Thu thu / Quan tri vien thu vien (Ke thua tu User).
  */
 public class Librarian extends User {
-    private static final long serialVersionUID = 1L;
 
     private String department;
     private LocalDate hireDate;
@@ -61,6 +60,11 @@ public class Librarian extends User {
     @Override
     public String getRole() {
         return "Thu thu";
+    }
+
+    @Override
+    public String getQuyenHan() {
+        return "Quan ly sach, quan ly thanh vien, khoa / mo khoa the thanh vien";
     }
 
     @Override

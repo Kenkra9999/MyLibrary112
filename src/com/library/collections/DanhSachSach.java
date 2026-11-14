@@ -1,317 +1,272 @@
 package com.library.collections;
 
-import java.io.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Scanner;
 import com.library.enums.BookFormat;
 import com.library.enums.BookStatus;
-import com.library.models.Author;
+import com.library.models.Book;
 import com.library.models.BookItem;
 import com.library.models.Rack;
+import com.library.search.Search;
+import com.library.utils.DateUtils;
+import com.library.utils.IdGenerator;
 
 /**
- * Lop mang cac doi tuong Sach (DanhSachSach) quan ly bang mang BookItem[].
- * Thoa man tieu chi: (2d) Lop mang cac doi tuong (array), Nhap/Xuat, Them 1/Them k, Sua, Xoa, Tim kiem, Thong ke, Doc/Ghi file text.
+ * LOP MANG DOI TUONG DanhSachSach: quan ly mang BookItem[] (cac ban sao sach).
+ * - Ke thua DanhSachCoBan<BookItem>: them, sua, xoa, tim kiem, doc/ghi file da co san.
+ * - Cai dat interface Search: tim theo tua de, tac gia, the loai, ngay xuat ban.
+ * - Bo sung: nhap n sach, sap xep, thong ke.
+ * File text: data/sach.txt
  */
-public class DanhSachSach implements IDanhSach<BookItem>, Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private BookItem[] danhSach;
-    private int soLuong;
-    private static final int SUC_CHUA_MAC_DINH = 10;
+public class DanhSachSach extends DanhSachCoBan<BookItem> implements Search {
 
     public DanhSachSach() {
-        this.danhSach = new BookItem[SUC_CHUA_MAC_DINH];
-        this.soLuong = 0;
+        super(new BookItem[SUC_CHUA_MAC_DINH]);
     }
 
     public DanhSachSach(int sucChua) {
-        if (sucChua <= 0) sucChua = SUC_CHUA_MAC_DINH;
-        this.danhSach = new BookItem[sucChua];
-        this.soLuong = 0;
+        super(new BookItem[sucChua > 0 ? sucChua : SUC_CHUA_MAC_DINH]);
     }
 
-    public DanhSachSach(BookItem[] initialArray) {
-        if (initialArray != null) {
-            this.danhSach = Arrays.copyOf(initialArray, initialArray.length);
-            this.soLuong = initialArray.length;
-        } else {
-            this.danhSach = new BookItem[SUC_CHUA_MAC_DINH];
-            this.soLuong = 0;
-        }
-    }
+    // ===================== CAI DAT HAM TRUU TUONG =====================
 
-    private void moRongMang() {
-        int sucChuaMoi = danhSach.length * 2;
-        danhSach = Arrays.copyOf(danhSach, sucChuaMoi);
+    @Override
+    protected String layMa(BookItem item) {
+        return item.getBarcode();
     }
 
     @Override
-    public void them(BookItem item) {
-        if (item == null) return;
-        if (soLuong >= danhSach.length) {
-            moRongMang();
-        }
-        danhSach[soLuong++] = item;
+    protected boolean khopTuKhoa(BookItem b, String q) {
+        return b.getBarcode().toLowerCase().contains(q)
+                || b.getIsbn().toLowerCase().contains(q)
+                || b.getTitle().toLowerCase().contains(q)
+                || b.getAuthorsAsString().toLowerCase().contains(q)
+                || b.getSubject().toLowerCase().contains(q)
+                || b.getPublisher().toLowerCase().contains(q);
     }
 
     @Override
-    public void themK(BookItem[] items) {
-        if (items == null || items.length == 0) return;
-        for (BookItem item : items) {
-            if (item != null) {
-                them(item);
-            }
-        }
+    protected String tieuDeBang() {
+        return String.format("%-10s | %-34s | %-22s | %-19s | %10s | %-18s | %s",
+                "MA VACH", "TUA DE", "TAC GIA", "THE LOAI", "GIA (VND)", "TRANG THAI", "KE");
     }
 
-    public void nhapDanhSach(int n, Scanner sc) {
-        System.out.println("--- NHAP " + n + " CUON SACH MOI VAO MANG ---");
+    @Override
+    protected String dongBang(BookItem b) {
+        String trangThai = b.getStatus().getDisplayName() + (b.isReferenceOnly() ? "*" : "");
+        return String.format("%-10s | %-34s | %-22s | %-19s | %,10.0f | %-18s | %s",
+                b.getBarcode(), rutGon(b.getTitle(), 34), rutGon(b.getAuthorsAsString(), 22),
+                rutGon(b.getSubject(), 19), b.getPrice(), rutGon(trangThai, 18), b.getPlacedAt());
+    }
+
+    @Override
+    protected String tieuDeFile() {
+        return "# MA_VACH|ISBN|TUA_DE|TAC_GIA(;)|THE_LOAI|NXB|NGON_NGU|SO_TRANG|GIA|DINH_DANG|TRANG_THAI"
+                + "|CHI_DOC_TAI_CHO|NGAY_MUA|NGAY_XB|NGAY_MUON|HAN_TRA|SO_KE|VI_TRI_KE";
+    }
+
+    @Override
+    protected String chuyenThanhDongText(BookItem b) {
+        return text(b.getBarcode()) + "|" + text(b.getIsbn()) + "|" + text(b.getTitle()) + "|"
+                + text(b.getAuthorsAsText()) + "|" + text(b.getSubject()) + "|" + text(b.getPublisher()) + "|"
+                + text(b.getLanguage()) + "|" + b.getNumberOfPages() + "|" + soRaText(b.getPrice()) + "|"
+                + b.getFormat().name() + "|" + b.getStatus().name() + "|" + b.isReferenceOnly() + "|"
+                + DateUtils.ngayRaText(b.getDateOfPurchase()) + "|" + DateUtils.ngayRaText(b.getPublicationDate()) + "|"
+                + DateUtils.ngayRaText(b.getBorrowedDate()) + "|" + DateUtils.ngayRaText(b.getDueDate()) + "|"
+                + b.getPlacedAt().getNumber() + "|" + text(b.getPlacedAt().getLocationIdentifier());
+    }
+
+    @Override
+    protected BookItem taoTuDongText(String[] t) {
+        BookItem b = new BookItem(t[1], t[2], t[4], t[5], t[6], Integer.parseInt(t[7]),
+                Book.taoMangTacGia(t[3]), t[0], Boolean.parseBoolean(t[11]), Double.parseDouble(t[8]),
+                BookFormat.valueOf(t[9]), BookStatus.valueOf(t[10]), DateUtils.parseDate(t[12]),
+                DateUtils.parseDate(t[13]), new Rack(Integer.parseInt(t[16]), t[17]));
+        b.setBorrowedDate(DateUtils.parseDate(t[14]));
+        b.setDueDate(DateUtils.parseDate(t[15]));
+        return b;
+    }
+
+    // ===================== CAI DAT INTERFACE Search =====================
+
+    @Override
+    public BookItem[] searchByTitle(String title) {
+        String q = title == null ? "" : title.trim().toLowerCase();
+        BookItem[] kq = new BookItem[soLuong];
+        int dem = 0;
+        for (int i = 0; i < soLuong; i++) {
+            if (danhSach[i].getTitle().toLowerCase().contains(q)) kq[dem++] = danhSach[i];
+        }
+        return catMang(kq, dem);
+    }
+
+    @Override
+    public BookItem[] searchByAuthor(String authorName) {
+        String q = authorName == null ? "" : authorName.trim().toLowerCase();
+        BookItem[] kq = new BookItem[soLuong];
+        int dem = 0;
+        for (int i = 0; i < soLuong; i++) {
+            if (danhSach[i].getAuthorsAsString().toLowerCase().contains(q)) kq[dem++] = danhSach[i];
+        }
+        return catMang(kq, dem);
+    }
+
+    @Override
+    public BookItem[] searchBySubject(String subject) {
+        String q = subject == null ? "" : subject.trim().toLowerCase();
+        BookItem[] kq = new BookItem[soLuong];
+        int dem = 0;
+        for (int i = 0; i < soLuong; i++) {
+            if (danhSach[i].getSubject().toLowerCase().contains(q)) kq[dem++] = danhSach[i];
+        }
+        return catMang(kq, dem);
+    }
+
+    @Override
+    public BookItem[] searchByPubDate(LocalDate pubDate) {
+        BookItem[] kq = new BookItem[soLuong];
+        int dem = 0;
+        for (int i = 0; i < soLuong; i++) {
+            if (pubDate != null && pubDate.equals(danhSach[i].getPublicationDate())) kq[dem++] = danhSach[i];
+        }
+        return catMang(kq, dem);
+    }
+
+    private BookItem[] catMang(BookItem[] kq, int dem) {
+        BookItem[] gon = new BookItem[dem];
+        for (int i = 0; i < dem; i++) gon[i] = kq[i];
+        return gon;
+    }
+
+    // ===================== NHAP n SACH =====================
+
+    /** Sinh ma vach moi chua ton tai trong mang (BC-0001, BC-0002, ...). */
+    public String taoMaVachMoi() {
+        String ma;
+        do {
+            ma = IdGenerator.taoMaVachSach();
+        } while (timKiemTheoMa(ma) != null);
+        return ma;
+    }
+
+    /**
+     * Nhap n cuon sach moi tu ban phim va them vao mang.
+     * Ma vach do he thong tu sinh (IdGenerator) nen khong bao gio trung.
+     * @return so sach them thanh cong
+     */
+    public int nhapDanhSach(int n, Scanner sc) {
+        int dem = 0;
         for (int i = 0; i < n; i++) {
-            System.out.println("Nhap thong tin cuon sach thu " + (i + 1) + ":");
-            System.out.print("  Ma vach (Barcode): ");
-            String barcode = sc.nextLine().trim();
-            System.out.print("  ISBN: ");
-            String isbn = sc.nextLine().trim();
-            System.out.print("  Tua de: ");
-            String title = sc.nextLine().trim();
-            System.out.print("  Tac gia: ");
-            String author = sc.nextLine().trim();
-            System.out.print("  The loai: ");
-            String subject = sc.nextLine().trim();
-            System.out.print("  Nha xuat ban: ");
-            String publisher = sc.nextLine().trim();
-            System.out.print("  Gia bia (VND): ");
-            double price = 100000;
-            try { price = Double.parseDouble(sc.nextLine().trim()); } catch (Exception ignored) {}
+            System.out.println("--- Nhap cuon sach thu " + (i + 1) + "/" + n + " ---");
+            BookItem b = new BookItem();
+            b.nhap(sc);  // goi BookItem.nhap() -> ben trong goi super.nhap() cua Book
+            b.setBarcode(taoMaVachMoi());
+            if (them(b)) {
+                dem++;
+                System.out.println("  [+] Da them: " + b.getTitle() + " - Ma vach: " + b.getBarcode());
+            }
+        }
+        return dem;
+    }
 
-            List<Author> authors = new ArrayList<>();
-            authors.add(new Author(author, ""));
-            Rack rack = new Rack(1, "Khu A - Ke 1");
-            BookItem item = new BookItem(isbn, title, subject, publisher, "Tieng Viet", 200, authors,
-                    barcode, false, price, BookFormat.PAPERBACK, BookStatus.AVAILABLE,
-                    LocalDate.now(), LocalDate.now(), rack);
-            them(item);
-            System.out.println("  [+] Da them cuon sach: " + title);
+    // ===================== SAP XEP (tren chinh mang) =====================
+
+    /** Sap xep tang dan theo tua de (thuat toan chon - selection sort). */
+    public void sapXepTheoTuaDe() {
+        for (int i = 0; i < soLuong - 1; i++) {
+            int min = i;
+            for (int j = i + 1; j < soLuong; j++) {
+                if (danhSach[j].getTitle().compareToIgnoreCase(danhSach[min].getTitle()) < 0) min = j;
+            }
+            hoanDoi(i, min);
         }
     }
 
-    @Override
-    public boolean sua(String barcode, BookItem newItem) {
-        if (barcode == null || newItem == null) return false;
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getBarcode().equalsIgnoreCase(barcode)) {
-                danhSach[i] = newItem;
-                return true;
+    /** Sap xep giam dan theo gia bia. */
+    public void sapXepTheoGiaGiamDan() {
+        for (int i = 0; i < soLuong - 1; i++) {
+            int max = i;
+            for (int j = i + 1; j < soLuong; j++) {
+                if (danhSach[j].getPrice() > danhSach[max].getPrice()) max = j;
             }
+            hoanDoi(i, max);
         }
-        return false;
     }
 
-    @Override
-    public boolean xoa(String barcode) {
-        if (barcode == null) return false;
-        int index = -1;
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getBarcode().equalsIgnoreCase(barcode)) {
-                index = i;
-                break;
-            }
-        }
-        if (index != -1) {
-            for (int i = index; i < soLuong - 1; i++) {
-                danhSach[i] = danhSach[i + 1];
-            }
-            danhSach[soLuong - 1] = null;
-            soLuong--;
-            return true;
-        }
-        return false;
+    private void hoanDoi(int i, int j) {
+        BookItem tam = danhSach[i];
+        danhSach[i] = danhSach[j];
+        danhSach[j] = tam;
     }
 
-    @Override
-    public BookItem timKiemTheoMa(String barcode) {
-        if (barcode == null) return null;
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getBarcode().equalsIgnoreCase(barcode)) {
-                return danhSach[i];
-            }
-        }
-        return null;
-    }
+    // ===================== THONG KE =====================
 
-    @Override
-    public BookItem[] timKiem(String tuKhoa) {
-        if (tuKhoa == null || tuKhoa.trim().isEmpty()) {
-            return getDanhSach();
-        }
-        String q = tuKhoa.toLowerCase().trim();
-        List<BookItem> matched = new ArrayList<>();
+    /** Dem so DAU SACH khac nhau (cac ban sao cung ISBN tinh la 1 dau sach). */
+    public int demSoDauSach() {
+        int dem = 0;
         for (int i = 0; i < soLuong; i++) {
-            BookItem item = danhSach[i];
-            if (item != null) {
-                if (item.getBarcode().toLowerCase().contains(q) ||
-                    item.getTitle().toLowerCase().contains(q) ||
-                    item.getAuthorsAsString().toLowerCase().contains(q) ||
-                    item.getSubject().toLowerCase().contains(q)) {
-                    matched.add(item);
+            boolean daGap = false;
+            for (int j = 0; j < i; j++) {
+                if (danhSach[j].getIsbn().equalsIgnoreCase(danhSach[i].getIsbn())) {
+                    daGap = true;
+                    break;
                 }
             }
+            if (!daGap) dem++;
         }
-        return matched.toArray(new BookItem[0]);
+        return dem;
     }
 
-    public BookItem[] timKiemTheoTuaDe(String tuaDe) {
-        if (tuaDe == null || tuaDe.trim().isEmpty()) return getDanhSach();
-        String q = tuaDe.toLowerCase().trim();
-        List<BookItem> matched = new ArrayList<>();
+    public double tongGiaTri() {
+        double tong = 0;
+        for (int i = 0; i < soLuong; i++) tong += danhSach[i].getPrice();
+        return tong;
+    }
+
+    public int demTheoTrangThai(BookStatus trangThai) {
+        int dem = 0;
         for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getTitle().toLowerCase().contains(q)) {
-                matched.add(danhSach[i]);
-            }
+            if (danhSach[i].getStatus() == trangThai) dem++;
         }
-        return matched.toArray(new BookItem[0]);
+        return dem;
     }
 
-    public BookItem[] timKiemTheoTacGia(String tacGia) {
-        if (tacGia == null || tacGia.trim().isEmpty()) return getDanhSach();
-        String q = tacGia.toLowerCase().trim();
-        List<BookItem> matched = new ArrayList<>();
+    /** In thong ke so ban sao theo the loai (dung 2 mang song song, khong dung HashMap). */
+    public void inThongKeTheoTheLoai() {
+        String[] theLoai = new String[soLuong];
+        int[] soLuongTheoLoai = new int[soLuong];
+        int soLoai = 0;
         for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getAuthorsAsString().toLowerCase().contains(q)) {
-                matched.add(danhSach[i]);
-            }
-        }
-        return matched.toArray(new BookItem[0]);
-    }
-
-    public BookItem[] timKiemTheoTheLoai(String theLoai) {
-        if (theLoai == null || theLoai.trim().isEmpty()) return getDanhSach();
-        String q = theLoai.toLowerCase().trim();
-        List<BookItem> matched = new ArrayList<>();
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getSubject().toLowerCase().contains(q)) {
-                matched.add(danhSach[i]);
-            }
-        }
-        return matched.toArray(new BookItem[0]);
-    }
-
-    public Map<String, Integer> thongKeTheoTheLoai() {
-        Map<String, Integer> map = new HashMap<>();
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null) {
-                String sub = danhSach[i].getSubject();
-                map.put(sub, map.getOrDefault(sub, 0) + 1);
-            }
-        }
-        return map;
-    }
-
-    public Map<BookStatus, Integer> thongKeTheoTrangThai() {
-        Map<BookStatus, Integer> map = new HashMap<>();
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null) {
-                BookStatus st = danhSach[i].getStatus();
-                map.put(st, map.getOrDefault(st, 0) + 1);
-            }
-        }
-        return map;
-    }
-
-    @Override
-    public void xuatDanhSach() {
-        System.out.println("=========================================================================================================");
-        System.out.printf("%-12s | %-32s | %-20s | %-16s | %-12s | %-12s\n",
-                "MA VACH", "TUA DE SACH", "TAC GIA", "THE LOAI", "GIA BIA", "TRANG THAI");
-        System.out.println("---------------------------------------------------------------------------------------------------------");
-        for (int i = 0; i < soLuong; i++) {
-            BookItem item = danhSach[i];
-            if (item != null) {
-                System.out.printf("%-12s | %-32s | %-20s | %-16s | %,-12.0f | %-12s\n",
-                        item.getBarcode(),
-                        rutGon(item.getTitle(), 32),
-                        rutGon(item.getAuthorsAsString(), 20),
-                        rutGon(item.getSubject(), 16),
-                        item.getPrice(),
-                        item.getStatus().getDisplayName());
-            }
-        }
-        System.out.println("=========================================================================================================");
-        System.out.println("Tong cong: " + soLuong + " ban sao sach trong mang.");
-    }
-
-    private String rutGon(String str, int maxLen) {
-        if (str == null) return "";
-        if (str.length() <= maxLen) return str;
-        return str.substring(0, maxLen - 3) + "...";
-    }
-
-    @Override
-    public int getSoLuong() {
-        return soLuong;
-    }
-
-    @Override
-    public BookItem[] getDanhSach() {
-        return Arrays.copyOf(danhSach, soLuong);
-    }
-
-    @Override
-    public void docFileText(String filePath) {
-        File file = new File(filePath);
-        if (!file.exists()) return;
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) continue;
-                String[] parts = line.split("\\|");
-                if (parts.length >= 7) {
-                    String barcode = parts[0].trim();
-                    String isbn = parts[1].trim();
-                    String title = parts[2].trim();
-                    String authorsStr = parts[3].trim();
-                    String subject = parts[4].trim();
-                    String publisher = parts[5].trim();
-                    double price = Double.parseDouble(parts[6].trim());
-                    String statusStr = parts.length > 7 ? parts[7].trim() : "AVAILABLE";
-
-                    List<Author> authors = new ArrayList<>();
-                    authors.add(new Author(authorsStr, ""));
-                    BookStatus status = BookStatus.valueOf(statusStr);
-                    BookItem item = new BookItem(isbn, title, subject, publisher, "Tieng Viet", 250, authors,
-                            barcode, false, price, BookFormat.PAPERBACK, status,
-                            LocalDate.now(), LocalDate.now(), new Rack(1, "Ke 1"));
-                    them(item);
+            String tl = danhSach[i].getSubject();
+            int viTri = -1;
+            for (int j = 0; j < soLoai; j++) {
+                if (theLoai[j].equalsIgnoreCase(tl)) {
+                    viTri = j;
+                    break;
                 }
             }
-            System.out.println("[+] Da doc " + soLuong + " cuon sach tu file text: " + filePath);
-        } catch (Exception e) {
-            System.err.println("[-] Loi doc file text sach: " + e.getMessage());
+            if (viTri == -1) {
+                theLoai[soLoai] = tl;
+                soLuongTheoLoai[soLoai] = 1;
+                soLoai++;
+            } else {
+                soLuongTheoLoai[viTri]++;
+            }
+        }
+        System.out.println("* Theo the loai:");
+        for (int j = 0; j < soLoai; j++) {
+            System.out.printf("    - %-28s: %d ban sao%n", theLoai[j], soLuongTheoLoai[j]);
         }
     }
 
-    @Override
-    public void ghiFileText(String filePath) {
-        try {
-            File file = new File(filePath);
-            if (file.getParentFile() != null) file.getParentFile().mkdirs();
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                bw.write("# BARCODE|ISBN|TITLE|AUTHORS|SUBJECT|PUBLISHER|PRICE|STATUS\n");
-                for (int i = 0; i < soLuong; i++) {
-                    BookItem b = danhSach[i];
-                    if (b != null) {
-                        bw.write(String.format("%s|%s|%s|%s|%s|%s|%.0f|%s\n",
-                                b.getBarcode(), b.getIsbn(), b.getTitle(),
-                                b.getAuthorsAsString(), b.getSubject(), b.getPublisher(),
-                                b.getPrice(), b.getStatus().name()));
-                    }
-                }
-            }
-            System.out.println("[+] Da ghi " + soLuong + " cuon sach ra file text: " + filePath);
-        } catch (Exception e) {
-            System.err.println("[-] Loi ghi file text sach: " + e.getMessage());
+    public void inThongKe() {
+        System.out.println("\n===== THONG KE KHO SACH =====");
+        System.out.println("* Tong so ban sao: " + soLuong + " | So dau sach: " + demSoDauSach());
+        System.out.printf("* Tong gia tri kho: %,.0f VND%n", tongGiaTri());
+        System.out.println("* Theo trang thai:");
+        for (BookStatus st : BookStatus.values()) {
+            System.out.printf("    - %-28s: %d%n", st.getDisplayName(), demTheoTrangThai(st));
         }
+        inThongKeTheoTheLoai();
     }
 }

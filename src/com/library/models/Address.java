@@ -1,12 +1,10 @@
 package com.library.models;
 
-import java.io.Serializable;
 
 /**
  * Custom Data Type bieu dien dia chi lien lac.
  */
-public class Address implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Address {
 
     private String streetAddress;
     private String city;
@@ -83,5 +81,26 @@ public class Address implements Serializable {
             sb.append(country);
         }
         return sb.length() > 0 ? sb.toString() : "Chua co dia chi";
+    }
+
+    /** Chuyen dia chi thanh 1 truong text de ghi file: "duong;thanh pho;tinh;ma buu chinh;quoc gia". */
+    public String toDongText() {
+        return giaTri(streetAddress) + ";" + giaTri(city) + ";" + giaTri(state) + ";" + giaTri(zipCode) + ";" + giaTri(country);
+    }
+
+    /** PHUONG THUC STATIC tao doi tuong Address tu chuoi da ghi bang toDongText(). */
+    public static Address tuDongText(String text) {
+        if (text == null || text.trim().isEmpty()) return new Address();
+        String[] p = text.split(";", -1);
+        return new Address(
+                p.length > 0 ? p[0] : "",
+                p.length > 1 ? p[1] : "",
+                p.length > 2 ? p[2] : "",
+                p.length > 3 ? p[3] : "",
+                p.length > 4 ? p[4] : "");
+    }
+
+    private static String giaTri(String s) {
+        return s == null ? "" : s.replace(";", ",").replace("|", "/");
     }
 }

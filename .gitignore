@@ -17,3 +17,6 @@ bin/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Du lieu do chuong trinh tu tao khi chay (lan dau se tu sinh du lieu mau)
+data/

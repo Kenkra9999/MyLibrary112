@@ -1,14 +1,12 @@
 package com.library.models;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import com.library.utils.DateUtils;
 
 /**
  * Class LibraryCard bieu dien the thu vien cua nguoi dung (Yeu cau R6).
  */
-public class LibraryCard implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class LibraryCard {
 
     private String cardNumber;
     private String barcode;

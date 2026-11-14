@@ -4,7 +4,6 @@ package com.library.models;
  * Class Author ke thua tu Person, bo sung mo ta tieu su cua tac gia.
  */
 public class Author extends Person {
-    private static final long serialVersionUID = 1L;
 
     private String description;
 

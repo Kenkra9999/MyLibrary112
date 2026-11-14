@@ -1,10 +1,11 @@
 package com.library.notifications;
 
+import java.time.LocalDateTime;
+
 /**
  * Class EmailNotification ke thua tu Notification (Gui thong bao qua Email).
  */
 public class EmailNotification extends Notification {
-    private static final long serialVersionUID = 1L;
 
     private String emailAddress;
 
@@ -15,6 +16,18 @@ public class EmailNotification extends Notification {
     public EmailNotification(String content, String recipientMemberId, String emailAddress) {
         super(content, recipientMemberId);
         this.emailAddress = emailAddress;
+    }
+
+    /** Constructor day du - dung khi doc lai tu file text. */
+    public EmailNotification(String notificationId, LocalDateTime createdOn, String content,
+                             String recipientMemberId, boolean isSent, String emailAddress) {
+        super(notificationId, createdOn, content, recipientMemberId, isSent);
+        this.emailAddress = emailAddress;
+    }
+
+    @Override
+    public String getNoiNhanText() {
+        return emailAddress == null ? "" : emailAddress;
     }
 
     public String getEmailAddress() {

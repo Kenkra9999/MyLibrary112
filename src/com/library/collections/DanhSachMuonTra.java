@@ -1,205 +1,106 @@
 package com.library.collections;
 
-import java.io.*;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
 import com.library.models.BookLending;
 import com.library.utils.DateUtils;
 
 /**
- * Lop mang cac doi tuong Muon Tra (DanhSachMuonTra) quan ly bang mang BookLending[].
+ * LOP MANG DOI TUONG DanhSachMuonTra: quan ly mang BookLending[] (cac luot muon sach).
+ * File text: data/muontra.txt
  */
-public class DanhSachMuonTra implements IDanhSach<BookLending>, Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private BookLending[] danhSach;
-    private int soLuong;
-    private static final int SUC_CHUA_MAC_DINH = 10;
+public class DanhSachMuonTra extends DanhSachCoBan<BookLending> {
 
     public DanhSachMuonTra() {
-        this.danhSach = new BookLending[SUC_CHUA_MAC_DINH];
-        this.soLuong = 0;
-    }
-
-    public DanhSachMuonTra(int sucChua) {
-        if (sucChua <= 0) sucChua = SUC_CHUA_MAC_DINH;
-        this.danhSach = new BookLending[sucChua];
-        this.soLuong = 0;
-    }
-
-    private void moRongMang() {
-        danhSach = Arrays.copyOf(danhSach, danhSach.length * 2);
+        super(new BookLending[SUC_CHUA_MAC_DINH]);
     }
 
     @Override
-    public void them(BookLending item) {
-        if (item == null) return;
-        if (soLuong >= danhSach.length) moRongMang();
-        danhSach[soLuong++] = item;
+    protected String layMa(BookLending l) {
+        return l.getLendingId();
     }
 
     @Override
-    public void themK(BookLending[] items) {
-        if (items == null) return;
-        for (BookLending l : items) {
-            if (l != null) them(l);
+    protected boolean khopTuKhoa(BookLending l, String q) {
+        return l.getLendingId().toLowerCase().contains(q)
+                || l.getItemBarcode().toLowerCase().contains(q)
+                || l.getMemberId().toLowerCase().contains(q);
+    }
+
+    @Override
+    protected String tieuDeBang() {
+        return String.format("%-9s | %-10s | %-8s | %-10s | %-10s | %s",
+                "MA MUON", "MA VACH", "MA TV", "NGAY MUON", "HAN TRA", "TRANG THAI");
+    }
+
+    @Override
+    protected String dongBang(BookLending l) {
+        String trangThai;
+        if (l.isReturned()) {
+            trangThai = "Da tra " + DateUtils.formatDate(l.getReturnDate())
+                    + (l.isOverdue() ? " (tre " + l.getOverdueDays() + " ngay)" : "");
+        } else {
+            trangThai = l.isOverdue() ? "QUA HAN " + l.getOverdueDays() + " ngay" : "Dang muon";
         }
+        return String.format("%-9s | %-10s | %-8s | %-10s | %-10s | %s",
+                l.getLendingId(), l.getItemBarcode(), l.getMemberId(),
+                DateUtils.formatDate(l.getCreationDate()), DateUtils.formatDate(l.getDueDate()), trangThai);
     }
 
     @Override
-    public boolean sua(String lendingId, BookLending newLending) {
-        if (lendingId == null || newLending == null) return false;
+    protected String tieuDeFile() {
+        return "# MA_MUON|MA_VACH|MA_TV|NGAY_MUON|HAN_TRA|NGAY_TRA|DA_TRA";
+    }
+
+    @Override
+    protected String chuyenThanhDongText(BookLending l) {
+        return text(l.getLendingId()) + "|" + text(l.getItemBarcode()) + "|" + text(l.getMemberId()) + "|"
+                + DateUtils.ngayRaText(l.getCreationDate()) + "|" + DateUtils.ngayRaText(l.getDueDate()) + "|"
+                + DateUtils.ngayRaText(l.getReturnDate()) + "|" + l.isReturned();
+    }
+
+    @Override
+    protected BookLending taoTuDongText(String[] t) {
+        return new BookLending(t[0], t[1], t[2], DateUtils.parseDate(t[3]), DateUtils.parseDate(t[4]),
+                DateUtils.parseDate(t[5]), Boolean.parseBoolean(t[6]));
+    }
+
+    /** Tim luot muon CHUA TRA cua 1 cuon sach boi 1 thanh vien. */
+    public BookLending timDangMuon(String maVach, String maThanhVien) {
         for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getLendingId().equalsIgnoreCase(lendingId)) {
-                danhSach[i] = newLending;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean xoa(String lendingId) {
-        if (lendingId == null) return false;
-        int index = -1;
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getLendingId().equalsIgnoreCase(lendingId)) {
-                index = i;
-                break;
-            }
-        }
-        if (index != -1) {
-            for (int i = index; i < soLuong - 1; i++) {
-                danhSach[i] = danhSach[i + 1];
-            }
-            danhSach[--soLuong] = null;
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public BookLending timKiemTheoMa(String lendingId) {
-        if (lendingId == null) return null;
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getLendingId().equalsIgnoreCase(lendingId)) {
-                return danhSach[i];
+            BookLending l = danhSach[i];
+            if (!l.isReturned() && l.getItemBarcode().equalsIgnoreCase(maVach)
+                    && l.getMemberId().equalsIgnoreCase(maThanhVien)) {
+                return l;
             }
         }
         return null;
     }
 
-    @Override
-    public BookLending[] timKiem(String tuKhoa) {
-        if (tuKhoa == null || tuKhoa.trim().isEmpty()) return getDanhSach();
-        String q = tuKhoa.toLowerCase().trim();
-        List<BookLending> matched = new ArrayList<>();
+    /** Lich su muon tra cua 1 thanh vien. */
+    public BookLending[] timTheoThanhVien(String maThanhVien) {
+        BookLending[] kq = new BookLending[soLuong];
+        int dem = 0;
         for (int i = 0; i < soLuong; i++) {
-            BookLending l = danhSach[i];
-            if (l != null) {
-                if (l.getLendingId().toLowerCase().contains(q) ||
-                    l.getItemBarcode().toLowerCase().contains(q) ||
-                    l.getMemberId().toLowerCase().contains(q)) {
-                    matched.add(l);
-                }
-            }
+            if (danhSach[i].getMemberId().equalsIgnoreCase(maThanhVien)) kq[dem++] = danhSach[i];
         }
-        return matched.toArray(new BookLending[0]);
+        return Arrays.copyOf(kq, dem);
     }
 
-    public int thongKeSoLuotQuaHan() {
-        int count = 0;
+    /** Cac luot muon dang qua han (chua tra va da qua han tra). */
+    public BookLending[] timQuaHan() {
+        BookLending[] kq = new BookLending[soLuong];
+        int dem = 0;
         for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && !danhSach[i].isReturned() && danhSach[i].isOverdue()) {
-                count++;
-            }
+            if (!danhSach[i].isReturned() && danhSach[i].isOverdue()) kq[dem++] = danhSach[i];
         }
-        return count;
+        return Arrays.copyOf(kq, dem);
     }
 
-    @Override
-    public void xuatDanhSach() {
-        System.out.println("=========================================================================================================");
-        System.out.printf("%-12s | %-12s | %-10s | %-12s | %-12s | %-12s | %-15s\n",
-                "MA MUON", "MA SACH", "MA TV", "NGAY MUON", "HAN TRA", "NGAY TRA", "TRANG THAI");
-        System.out.println("---------------------------------------------------------------------------------------------------------");
+    public int demDangMuon() {
+        int dem = 0;
         for (int i = 0; i < soLuong; i++) {
-            BookLending l = danhSach[i];
-            if (l != null) {
-                String st = l.isReturned() ? "Da tra" : (l.isOverdue() ? "QUA HAN (" + l.getOverdueDays() + "n)" : "Dang muon");
-                System.out.printf("%-12s | %-12s | %-10s | %-12s | %-12s | %-12s | %-15s\n",
-                        l.getLendingId(), l.getItemBarcode(), l.getMemberId(),
-                        DateUtils.formatDate(l.getCreationDate()),
-                        DateUtils.formatDate(l.getDueDate()),
-                        l.getReturnDate() != null ? DateUtils.formatDate(l.getReturnDate()) : "--",
-                        st);
-            }
+            if (!danhSach[i].isReturned()) dem++;
         }
-        System.out.println("=========================================================================================================");
-        System.out.println("Tong cong: " + soLuong + " luot muon tra trong mang.");
-    }
-
-    @Override
-    public int getSoLuong() {
-        return soLuong;
-    }
-
-    @Override
-    public BookLending[] getDanhSach() {
-        return Arrays.copyOf(danhSach, soLuong);
-    }
-
-    @Override
-    public void docFileText(String filePath) {
-        File file = new File(filePath);
-        if (!file.exists()) return;
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) continue;
-                String[] parts = line.split("\\|");
-                if (parts.length >= 5) {
-                    String id = parts[0].trim();
-                    String barcode = parts[1].trim();
-                    String memId = parts[2].trim();
-                    LocalDate createDate = DateUtils.parseDate(parts[3].trim());
-                    LocalDate dueDate = DateUtils.parseDate(parts[4].trim());
-                    LocalDate returnDate = (parts.length > 5 && !parts[5].trim().equals("null")) ? DateUtils.parseDate(parts[5].trim()) : null;
-                    boolean isRet = parts.length > 6 && Boolean.parseBoolean(parts[6].trim());
-
-                    BookLending l = new BookLending(id, barcode, memId, createDate, dueDate, returnDate, isRet);
-                    them(l);
-                }
-            }
-            System.out.println("[+] Da doc " + soLuong + " luot muon tra tu file text: " + filePath);
-        } catch (Exception e) {
-            System.err.println("[-] Loi doc file text muon tra: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void ghiFileText(String filePath) {
-        try {
-            File file = new File(filePath);
-            if (file.getParentFile() != null) file.getParentFile().mkdirs();
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                bw.write("# ID|BARCODE|MEMBER_ID|BORROW_DATE|DUE_DATE|RETURN_DATE|IS_RETURNED\n");
-                for (int i = 0; i < soLuong; i++) {
-                    BookLending l = danhSach[i];
-                    if (l != null) {
-                        String retStr = l.getReturnDate() != null ? DateUtils.formatDate(l.getReturnDate()) : "null";
-                        bw.write(String.format("%s|%s|%s|%s|%s|%s|%b\n",
-                                l.getLendingId(), l.getItemBarcode(), l.getMemberId(),
-                                DateUtils.formatDate(l.getCreationDate()),
-                                DateUtils.formatDate(l.getDueDate()),
-                                retStr, l.isReturned()));
-                    }
-                }
-            }
-            System.out.println("[+] Da ghi " + soLuong + " luot muon tra ra file text: " + filePath);
-        } catch (Exception e) {
-            System.err.println("[-] Loi ghi file text muon tra: " + e.getMessage());
-        }
+        return dem;
     }
 }

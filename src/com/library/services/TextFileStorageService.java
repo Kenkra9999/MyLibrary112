@@ -1,80 +1,67 @@
 package com.library.services;
 
 import java.io.File;
-import com.library.collections.*;
+import com.library.collections.IDanhSach;
 
 /**
- * Dich vu doc va ghi du lieu he thong thu vien ra cac tap tin van ban thuan (Plain Text File).
- * Thoa man tieu chi: (1d) Doc va ghi du lieu len file (text).
+ * Doc / ghi toan bo du lieu thu vien ra cac FILE TEXT trong thu muc data/ (noi luu tru chinh cua chuong trinh).
+ *
+ * DA HINH: lay tat ca lop mang duoi dang IDanhSach<?>[] roi goi chung ghiFileText()/docFileText();
+ * moi phan tu tu dung ham cua lop cu the (DanhSachSach, DanhSachThanhVien, ...).
  */
-public class TextFileStorageService {
-    private static final String DATA_DIR = "data";
-    public static final String FILE_SACH = DATA_DIR + "/sach.txt";
-    public static final String FILE_THANH_VIEN = DATA_DIR + "/thanhvien.txt";
-    public static final String FILE_MUON_TRA = DATA_DIR + "/muontra.txt";
-    public static final String FILE_PHAT = DATA_DIR + "/phat.txt";
+public final class TextFileStorageService {
+    public static final String THU_MUC = "data";
 
-    public static synchronized void exportToTextFiles(Library library) {
-        File dir = new File(DATA_DIR);
-        if (!dir.exists()) dir.mkdirs();
+    /** Ten file theo DUNG THU TU cua Library.getTatCaDanhSach(). */
+    private static final String[] TEN_FILE = {
+            "sach.txt", "thanhvien.txt", "thuthu.txt", "muontra.txt", "datcho.txt", "phat.txt", "thongbao.txt"
+    };
 
-        // 1. Ghi sach
-        DanhSachSach dsSach = new DanhSachSach(library.getCatalog().getAllBookItems().toArray(new com.library.models.BookItem[0]));
-        dsSach.ghiFileText(FILE_SACH);
-
-        // 2. Ghi thanh vien
-        DanhSachThanhVien dsTV = new DanhSachThanhVien(library.getAllMembers().size());
-        dsTV.themK(library.getAllMembers().toArray(new com.library.users.Member[0]));
-        dsTV.ghiFileText(FILE_THANH_VIEN);
-
-        // 3. Ghi muon tra
-        DanhSachMuonTra dsMT = new DanhSachMuonTra(library.getLendings().size());
-        dsMT.themK(library.getLendings().toArray(new com.library.models.BookLending[0]));
-        dsMT.ghiFileText(FILE_MUON_TRA);
-
-        // 4. Ghi tien phat
-        DanhSachPhat dsPhat = new DanhSachPhat(library.getFines().size());
-        dsPhat.themK(library.getFines().toArray(new com.library.models.Fine[0]));
-        dsPhat.ghiFileText(FILE_PHAT);
-
-        System.out.println("[+] Da xuat toan bo du lieu ra cac tap tin Text trong thu muc /data/");
+    private TextFileStorageService() {
+        // Lop tien ich chi gom phuong thuc static
     }
 
-    public static synchronized void importFromTextFiles(Library library) {
-        File fSach = new File(FILE_SACH);
-        if (fSach.exists()) {
-            DanhSachSach dsSach = new DanhSachSach();
-            dsSach.docFileText(FILE_SACH);
-            for (com.library.models.BookItem item : dsSach.getDanhSach()) {
-                library.getCatalog().addBookItem(item);
-            }
-        }
+    public static String duongDan(int i) {
+        return THU_MUC + "/" + TEN_FILE[i];
+    }
 
-        File fTV = new File(FILE_THANH_VIEN);
-        if (fTV.exists()) {
-            DanhSachThanhVien dsTV = new DanhSachThanhVien();
-            dsTV.docFileText(FILE_THANH_VIEN);
-            for (com.library.users.Member m : dsTV.getDanhSach()) {
-                library.registerMember(m);
-            }
-        }
+    /** Da co du lieu luu truoc do chua (dua vao file sach.txt). */
+    public static boolean coDuLieu() {
+        return new File(duongDan(0)).exists();
+    }
 
-        File fMT = new File(FILE_MUON_TRA);
-        if (fMT.exists()) {
-            DanhSachMuonTra dsMT = new DanhSachMuonTra();
-            dsMT.docFileText(FILE_MUON_TRA);
-            for (com.library.models.BookLending l : dsMT.getDanhSach()) {
-                library.getLendings().add(l);
+    /** Ghi tat ca danh sach ra file text. */
+    public static boolean ghiTatCa(Library library) {
+        IDanhSach<?>[] tatCa = library.getTatCaDanhSach();
+        boolean thanhCong = true;
+        for (int i = 0; i < tatCa.length; i++) {
+            if (!tatCa[i].ghiFileText(duongDan(i))) {
+                thanhCong = false;
             }
         }
+        return thanhCong;
+    }
 
-        File fPhat = new File(FILE_PHAT);
-        if (fPhat.exists()) {
-            DanhSachPhat dsPhat = new DanhSachPhat();
-            dsPhat.docFileText(FILE_PHAT);
-            for (com.library.models.Fine f : dsPhat.getDanhSach()) {
-                library.getFines().add(f);
-            }
+    /** Doc tat ca file text vao cac danh sach (du lieu cu trong mang bi thay the). Tra ve tong so ban ghi. */
+    public static int docTatCa(Library library) {
+        IDanhSach<?>[] tatCa = library.getTatCaDanhSach();
+        int tong = 0;
+        for (int i = 0; i < tatCa.length; i++) {
+            tong += tatCa[i].docFileText(duongDan(i));
         }
+        library.dongBoBoDemMa();
+        return tong;
+    }
+
+    /** In bang: ten file - so ban ghi trong mang tuong ung. */
+    public static void inThongTinFile(Library library) {
+        IDanhSach<?>[] tatCa = library.getTatCaDanhSach();
+        System.out.println("-------------------------------------------------------------");
+        System.out.printf("%-20s | %-22s | %s%n", "FILE", "LOP MANG", "SO BAN GHI");
+        System.out.println("-------------------------------------------------------------");
+        for (int i = 0; i < tatCa.length; i++) {
+            System.out.printf("%-20s | %-22s | %d%n", duongDan(i), tatCa[i].getClass().getSimpleName(), tatCa[i].getSoLuong());
+        }
+        System.out.println("-------------------------------------------------------------");
     }
 }

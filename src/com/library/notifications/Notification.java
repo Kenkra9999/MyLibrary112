@@ -1,6 +1,5 @@
 package com.library.notifications;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import com.library.utils.DateUtils;
 import com.library.utils.IdGenerator;
@@ -8,8 +7,7 @@ import com.library.utils.IdGenerator;
 /**
  * Abstract Class Notification dai dien cho thong bao he thong gui toi thanh vien (Yeu cau R12).
  */
-public abstract class Notification implements Serializable {
-    private static final long serialVersionUID = 1L;
+public abstract class Notification {
 
     private String notificationId;
     private LocalDateTime createdOn;
@@ -18,13 +16,13 @@ public abstract class Notification implements Serializable {
     private boolean isSent;
 
     public Notification() {
-        this.notificationId = IdGenerator.generateNotificationId();
+        this.notificationId = IdGenerator.taoMaThongBao();
         this.createdOn = LocalDateTime.now();
         this.isSent = false;
     }
 
     public Notification(String content, String recipientMemberId) {
-        this.notificationId = IdGenerator.generateNotificationId();
+        this.notificationId = IdGenerator.taoMaThongBao();
         this.createdOn = LocalDateTime.now();
         this.content = content;
         this.recipientMemberId = recipientMemberId;
@@ -79,9 +77,14 @@ public abstract class Notification implements Serializable {
         isSent = sent;
     }
 
+    /** HAM TRUU TUONG: moi kenh thong bao co cach gui khac nhau. */
     public abstract boolean sendNotification();
 
+    /** HAM TRUU TUONG: ten loai thong bao ("Email" / "Buu dien"). */
     public abstract String getNotificationType();
+
+    /** HAM TRUU TUONG: noi nhan (dia chi email hoac dia chi buu dien) dang text de ghi file. */
+    public abstract String getNoiNhanText();
 
     @Override
     public String toString() {

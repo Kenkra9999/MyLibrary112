@@ -1,6 +1,5 @@
 package com.library.users;
 
-import java.io.Serializable;
 import com.library.enums.AccountStatus;
 import com.library.models.Address;
 import com.library.models.LibraryCard;
@@ -9,8 +8,7 @@ import com.library.models.Person;
 /**
  * Abstract Class User dai dien cho nguoi dung truu tuong trong he thong (Yeu cau R5, R6).
  */
-public abstract class User implements Serializable {
-    private static final long serialVersionUID = 1L;
+public abstract class User {
 
     private String id;
     private String password;
@@ -72,19 +70,19 @@ public abstract class User implements Serializable {
     }
 
     public String getName() {
-        return person != null ? person.getName() : "N/A";
+        return person.getName() != null ? person.getName() : "N/A";
     }
 
     public String getEmail() {
-        return person != null ? person.getEmail() : "";
+        return person.getEmail() != null ? person.getEmail() : "";
     }
 
     public String getPhone() {
-        return person != null ? person.getPhone() : "";
+        return person.getPhone() != null ? person.getPhone() : "";
     }
 
     public Address getAddress() {
-        return person != null ? person.getAddress() : null;
+        return person.getAddress() != null ? person.getAddress() : new Address();
     }
 
     public boolean isActive() {
@@ -92,19 +90,14 @@ public abstract class User implements Serializable {
     }
 
     public boolean checkPassword(String inputPassword) {
-        if (this.password == null) return true;
-        return this.password.equals(inputPassword);
+        return this.password != null && this.password.equals(inputPassword);
     }
 
-    public boolean resetPassword(String oldPass, String newPass) {
-        if (checkPassword(oldPass)) {
-            this.password = newPass;
-            return true;
-        }
-        return false;
-    }
-
+    /** HAM TRUU TUONG: moi loai nguoi dung tu tra ve vai tro cua minh. */
     public abstract String getRole();
+
+    /** HAM TRUU TUONG: mo ta quyen han rieng cua tung loai nguoi dung (da hinh khi duyet mang User[]). */
+    public abstract String getQuyenHan();
 
     @Override
     public String toString() {

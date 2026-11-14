@@ -1,6 +1,5 @@
 package com.library.models;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import com.library.utils.Constants;
@@ -10,8 +9,7 @@ import com.library.utils.IdGenerator;
 /**
  * Class BookLending quan ly thong tin va trang thai mot luot muon sach (Yeu cau R1, R7, R8, R10).
  */
-public class BookLending implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class BookLending {
 
     private String lendingId;
     private String itemBarcode;
@@ -22,14 +20,14 @@ public class BookLending implements Serializable {
     private boolean isReturned;
 
     public BookLending() {
-        this.lendingId = "LEN-" + IdGenerator.generateShortUuid();
+        this.lendingId = IdGenerator.taoMaMuon();
         this.creationDate = LocalDate.now();
         this.dueDate = this.creationDate.plusDays(Constants.MAX_LENDING_DAYS);
         this.isReturned = false;
     }
 
     public BookLending(String itemBarcode, String memberId) {
-        this.lendingId = "LEN-" + IdGenerator.generateShortUuid();
+        this.lendingId = IdGenerator.taoMaMuon();
         this.itemBarcode = itemBarcode;
         this.memberId = memberId;
         this.creationDate = LocalDate.now();

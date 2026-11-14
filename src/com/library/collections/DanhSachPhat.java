@@ -1,208 +1,90 @@
 package com.library.collections;
 
-import java.io.*;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
 import com.library.models.Fine;
 import com.library.utils.DateUtils;
 
 /**
- * Lop mang cac doi tuong Tien Phat (DanhSachPhat) quan ly bang mang Fine[].
+ * LOP MANG DOI TUONG DanhSachPhat: quan ly mang Fine[] (cac bien lai tien phat).
+ * File text: data/phat.txt
  */
-public class DanhSachPhat implements IDanhSach<Fine>, Serializable {
-    private static final long serialVersionUID = 1L;
-
-    private Fine[] danhSach;
-    private int soLuong;
-    private static final int SUC_CHUA_MAC_DINH = 10;
+public class DanhSachPhat extends DanhSachCoBan<Fine> {
 
     public DanhSachPhat() {
-        this.danhSach = new Fine[SUC_CHUA_MAC_DINH];
-        this.soLuong = 0;
-    }
-
-    public DanhSachPhat(int sucChua) {
-        if (sucChua <= 0) sucChua = SUC_CHUA_MAC_DINH;
-        this.danhSach = new Fine[sucChua];
-        this.soLuong = 0;
-    }
-
-    private void moRongMang() {
-        danhSach = Arrays.copyOf(danhSach, danhSach.length * 2);
+        super(new Fine[SUC_CHUA_MAC_DINH]);
     }
 
     @Override
-    public void them(Fine item) {
-        if (item == null) return;
-        if (soLuong >= danhSach.length) moRongMang();
-        danhSach[soLuong++] = item;
+    protected String layMa(Fine f) {
+        return f.getFineId();
     }
 
     @Override
-    public void themK(Fine[] items) {
-        if (items == null) return;
-        for (Fine f : items) {
-            if (f != null) them(f);
-        }
+    protected boolean khopTuKhoa(Fine f, String q) {
+        return f.getFineId().toLowerCase().contains(q)
+                || f.getMemberId().toLowerCase().contains(q)
+                || f.getItemBarcode().toLowerCase().contains(q);
     }
 
     @Override
-    public boolean sua(String fineId, Fine newFine) {
-        if (fineId == null || newFine == null) return false;
+    protected String tieuDeBang() {
+        return String.format("%-9s | %-8s | %-10s | %12s | %-10s | %s", "MA PHAT", "MA TV", "MA VACH", "SO TIEN", "NGAY TAO", "TRANG THAI");
+    }
+
+    @Override
+    protected String dongBang(Fine f) {
+        return String.format("%-9s | %-8s | %-10s | %,12.0f | %-10s | %s", f.getFineId(), f.getMemberId(),
+                f.getItemBarcode(), f.getAmount(), DateUtils.formatDate(f.getCreationDate()),
+                f.isPaid() ? "Da dong " + DateUtils.formatDate(f.getPaidDate()) : "CHUA DONG");
+    }
+
+    @Override
+    protected String tieuDeFile() {
+        return "# MA_PHAT|SO_TIEN|NGAY_TAO|MA_VACH|MA_TV|DA_DONG|NGAY_DONG";
+    }
+
+    @Override
+    protected String chuyenThanhDongText(Fine f) {
+        return text(f.getFineId()) + "|" + soRaText(f.getAmount()) + "|" + DateUtils.ngayRaText(f.getCreationDate()) + "|"
+                + text(f.getItemBarcode()) + "|" + text(f.getMemberId()) + "|" + f.isPaid() + "|"
+                + DateUtils.ngayRaText(f.getPaidDate());
+    }
+
+    @Override
+    protected Fine taoTuDongText(String[] t) {
+        return new Fine(t[0], Double.parseDouble(t[1]), DateUtils.parseDate(t[2]), t[3], t[4],
+                Boolean.parseBoolean(t[5]), DateUtils.parseDate(t[6]));
+    }
+
+    /** Thanh vien con khoan phat chua dong hay khong. */
+    public boolean coPhatChuaDong(String maThanhVien) {
         for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getFineId().equalsIgnoreCase(fineId)) {
-                danhSach[i] = newFine;
-                return true;
-            }
+            if (!danhSach[i].isPaid() && danhSach[i].getMemberId().equalsIgnoreCase(maThanhVien)) return true;
         }
         return false;
     }
 
-    @Override
-    public boolean xoa(String fineId) {
-        if (fineId == null) return false;
-        int index = -1;
+    /** Cac khoan phat chua dong cua 1 thanh vien. */
+    public Fine[] timChuaDongCuaThanhVien(String maThanhVien) {
+        Fine[] kq = new Fine[soLuong];
+        int dem = 0;
         for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getFineId().equalsIgnoreCase(fineId)) {
-                index = i;
-                break;
-            }
+            if (!danhSach[i].isPaid() && danhSach[i].getMemberId().equalsIgnoreCase(maThanhVien)) kq[dem++] = danhSach[i];
         }
-        if (index != -1) {
-            for (int i = index; i < soLuong - 1; i++) {
-                danhSach[i] = danhSach[i + 1];
-            }
-            danhSach[--soLuong] = null;
-            return true;
-        }
-        return false;
+        return Arrays.copyOf(kq, dem);
     }
 
-    @Override
-    public Fine timKiemTheoMa(String fineId) {
-        if (fineId == null) return null;
+    public double tongTienPhat() {
+        double tong = 0;
+        for (int i = 0; i < soLuong; i++) tong += danhSach[i].getAmount();
+        return tong;
+    }
+
+    public double tongTienChuaThu() {
+        double tong = 0;
         for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && danhSach[i].getFineId().equalsIgnoreCase(fineId)) {
-                return danhSach[i];
-            }
+            if (!danhSach[i].isPaid()) tong += danhSach[i].getAmount();
         }
-        return null;
-    }
-
-    @Override
-    public Fine[] timKiem(String tuKhoa) {
-        if (tuKhoa == null || tuKhoa.trim().isEmpty()) return getDanhSach();
-        String q = tuKhoa.toLowerCase().trim();
-        List<Fine> matched = new ArrayList<>();
-        for (int i = 0; i < soLuong; i++) {
-            Fine f = danhSach[i];
-            if (f != null) {
-                if (f.getFineId().toLowerCase().contains(q) ||
-                    f.getMemberId().toLowerCase().contains(q) ||
-                    f.getItemBarcode().toLowerCase().contains(q)) {
-                    matched.add(f);
-                }
-            }
-        }
-        return matched.toArray(new Fine[0]);
-    }
-
-    public double thongKeTongTienPhat() {
-        double sum = 0;
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null) sum += danhSach[i].getAmount();
-        }
-        return sum;
-    }
-
-    public double thongKeTienPhatChuaThu() {
-        double sum = 0;
-        for (int i = 0; i < soLuong; i++) {
-            if (danhSach[i] != null && !danhSach[i].isPaid()) sum += danhSach[i].getAmount();
-        }
-        return sum;
-    }
-
-    @Override
-    public void xuatDanhSach() {
-        System.out.println("=========================================================================================================");
-        System.out.printf("%-10s | %-12s | %-10s | %-15s | %-12s | %-12s | %-12s\n",
-                "MA PHAT", "SO TIEN", "MA TV", "MA SACH", "NGAY TAO", "NGAY THU", "TRANG THAI");
-        System.out.println("---------------------------------------------------------------------------------------------------------");
-        for (int i = 0; i < soLuong; i++) {
-            Fine f = danhSach[i];
-            if (f != null) {
-                System.out.printf("%-10s | %,-12.0f | %-10s | %-15s | %-12s | %-12s | %-12s\n",
-                        f.getFineId(), f.getAmount(), f.getMemberId(), f.getItemBarcode(),
-                        DateUtils.formatDate(f.getCreationDate()),
-                        f.getPaidDate() != null ? DateUtils.formatDate(f.getPaidDate()) : "--",
-                        f.isPaid() ? "Da dong" : "CHUA DONG");
-            }
-        }
-        System.out.println("=========================================================================================================");
-        System.out.println("Tong cong: " + soLuong + " bien lai phat trong mang.");
-    }
-
-    @Override
-    public int getSoLuong() {
-        return soLuong;
-    }
-
-    @Override
-    public Fine[] getDanhSach() {
-        return Arrays.copyOf(danhSach, soLuong);
-    }
-
-    @Override
-    public void docFileText(String filePath) {
-        File file = new File(filePath);
-        if (!file.exists()) return;
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                line = line.trim();
-                if (line.isEmpty() || line.startsWith("#")) continue;
-                String[] parts = line.split("\\|");
-                if (parts.length >= 5) {
-                    String id = parts[0].trim();
-                    double amount = Double.parseDouble(parts[1].trim());
-                    String barcode = parts[2].trim();
-                    String memId = parts[3].trim();
-                    LocalDate createDate = DateUtils.parseDate(parts[4].trim());
-                    boolean isPaid = parts.length > 5 && Boolean.parseBoolean(parts[5].trim());
-                    LocalDate paidDate = (parts.length > 6 && !parts[6].trim().equals("null")) ? DateUtils.parseDate(parts[6].trim()) : null;
-
-                    Fine f = new Fine(id, amount, createDate, barcode, memId, isPaid, paidDate);
-                    them(f);
-                }
-            }
-            System.out.println("[+] Da doc " + soLuong + " bien lai phat tu file text: " + filePath);
-        } catch (Exception e) {
-            System.err.println("[-] Loi doc file text tien phat: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void ghiFileText(String filePath) {
-        try {
-            File file = new File(filePath);
-            if (file.getParentFile() != null) file.getParentFile().mkdirs();
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-                bw.write("# ID|AMOUNT|BARCODE|MEMBER_ID|CREATED_DATE|IS_PAID|PAID_DATE\n");
-                for (int i = 0; i < soLuong; i++) {
-                    Fine f = danhSach[i];
-                    if (f != null) {
-                        String paidStr = f.getPaidDate() != null ? DateUtils.formatDate(f.getPaidDate()) : "null";
-                        bw.write(String.format("%s|%.0f|%s|%s|%s|%b|%s\n",
-                                f.getFineId(), f.getAmount(), f.getItemBarcode(), f.getMemberId(),
-                                DateUtils.formatDate(f.getCreationDate()),
-                                f.isPaid(), paidStr));
-                    }
-                }
-            }
-            System.out.println("[+] Da ghi " + soLuong + " bien lai phat ra file text: " + filePath);
-        } catch (Exception e) {
-            System.err.println("[-] Loi ghi file text tien phat: " + e.getMessage());
-        }
+        return tong;
     }
 }

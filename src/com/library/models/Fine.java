@@ -1,15 +1,13 @@
 package com.library.models;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import com.library.utils.DateUtils;
 import com.library.utils.IdGenerator;
 
 /**
- * Class Fine quan ly tien phat qua han muon sach (Yeu cau R15 / Pay Fine).
+ * Class Fine quan ly tien phat qua han muon sach (use case "Pay fine" - tinh nang mo rong cua nhom).
  */
-public class Fine implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Fine {
 
     private String fineId;
     private double amount;
@@ -20,13 +18,13 @@ public class Fine implements Serializable {
     private LocalDate paidDate;
 
     public Fine() {
-        this.fineId = IdGenerator.generateFineId();
+        this.fineId = IdGenerator.taoMaPhat();
         this.creationDate = LocalDate.now();
         this.isPaid = false;
     }
 
     public Fine(double amount, String itemBarcode, String memberId) {
-        this.fineId = IdGenerator.generateFineId();
+        this.fineId = IdGenerator.taoMaPhat();
         this.amount = amount;
         this.creationDate = LocalDate.now();
         this.itemBarcode = itemBarcode;

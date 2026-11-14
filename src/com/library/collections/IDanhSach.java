@@ -1,64 +1,46 @@
 package com.library.collections;
 
 /**
- * Interface IDanhSach dinh nghia cac thao tac chuan cho lop mang doi tuong (Array).
- * Dap ung tieu chi cham do an OOP: Interface, Mang doi tuong, Da hinh, Doc/Ghi file text.
+ * INTERFACE IDanhSach: dinh nghia cac thao tac chuan cua mot LOP MANG DOI TUONG.
+ * Moi lop DanhSachXxx (sach, thanh vien, muon tra, phat...) deu cai dat interface nay,
+ * nho vay co the duyet chung trong mang IDanhSach<?>[] (vd: ghi/doc tat ca file text) -> DA HINH.
  *
- * @param <T> Kieu doi tuong quan ly trong mang
+ * @param <T> kieu doi tuong duoc quan ly trong mang
  */
 public interface IDanhSach<T> {
-    /**
-     * Them 1 phan tu vao mang (tu dong tang kich thuoc mang neu day).
-     */
-    void them(T item);
+    /** Them 1 phan tu (tu mo rong mang khi day). Tra ve false neu null hoac trung ma. */
+    boolean them(T item);
 
-    /**
-     * Them k phan tu vao mang.
-     */
-    void themK(T[] items);
+    /** Them k phan tu; tra ve so phan tu them thanh cong. */
+    int themK(T[] items);
 
-    /**
-     * Sua thong tin phan tu theo ma dinh danh.
-     */
-    boolean sua(String ma, T newItem);
+    /** Thay phan tu co ma tuong ung bang doi tuong moi (ma giu nguyen). */
+    boolean sua(String ma, T itemMoi);
 
-    /**
-     * Xoa phan tu khoi mang theo ma dinh danh.
-     */
+    /** Xoa phan tu theo ma (don cac phan tu phia sau len). */
     boolean xoa(String ma);
 
-    /**
-     * Tim kiem chinh xac phan tu theo ma.
-     */
+    /** Tim chinh xac theo ma; khong co -> null. */
     T timKiemTheoMa(String ma);
 
-    /**
-     * Tim kiem gan dung theo tu khoa.
-     */
+    /** Tim gan dung theo tu khoa; tra ve mang ket qua. */
     T[] timKiem(String tuKhoa);
 
-    /**
-     * Xuat toan bo danh sach doi tuong ra man hinh console.
-     */
+    /** In toan bo danh sach ra man hinh dang bang. */
     void xuatDanhSach();
 
-    /**
-     * Lay so luong phan tu thuc te dang co trong mang.
-     */
+    /** So phan tu thuc te dang co trong mang. */
     int getSoLuong();
 
-    /**
-     * Lay mang chua cac phan tu thuc te.
-     */
+    /** Ban sao mang chua dung soLuong phan tu thuc te. */
     T[] getDanhSach();
 
-    /**
-     * Doc du lieu tu tap tin van ban (Plain Text File).
-     */
-    void docFileText(String filePath);
+    /** Xoa het phan tu trong mang. */
+    void xoaTatCa();
 
-    /**
-     * Ghi du lieu ra tap tin van ban (Plain Text File).
-     */
-    void ghiFileText(String filePath);
+    /** Doc du lieu tu file text (xoa du lieu cu truoc khi doc). Tra ve so dong doc thanh cong. */
+    int docFileText(String duongDan);
+
+    /** Ghi toan bo mang ra file text. Tra ve true neu ghi thanh cong. */
+    boolean ghiFileText(String duongDan);
 }

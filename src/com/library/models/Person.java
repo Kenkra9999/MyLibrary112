@@ -1,12 +1,9 @@
 package com.library.models;
 
-import java.io.Serializable;
-
 /**
  * Class Person lưu trữ thông tin cá nhân cơ bản (Họ tên, Địa chỉ, Email, Số điện thoại).
  */
-public class Person implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class Person {
 
     private String name;
     private Address address;

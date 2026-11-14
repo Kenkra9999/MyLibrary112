@@ -1,6 +1,5 @@
 package com.library.models;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import com.library.enums.ReservationStatus;
 import com.library.utils.DateUtils;
@@ -9,8 +8,7 @@ import com.library.utils.IdGenerator;
 /**
  * Class BookReservation quan ly phieu dat giu sach (Yeu cau R9, R10, R13).
  */
-public class BookReservation implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class BookReservation {
 
     private String reservationId;
     private String itemBarcode;
@@ -19,13 +17,13 @@ public class BookReservation implements Serializable {
     private ReservationStatus status;
 
     public BookReservation() {
-        this.reservationId = "RES-" + IdGenerator.generateShortUuid();
+        this.reservationId = IdGenerator.taoMaDatCho();
         this.creationDate = LocalDateTime.now();
         this.status = ReservationStatus.WAITING;
     }
 
     public BookReservation(String itemBarcode, String memberId) {
-        this.reservationId = "RES-" + IdGenerator.generateShortUuid();
+        this.reservationId = IdGenerator.taoMaDatCho();
         this.itemBarcode = itemBarcode;
         this.memberId = memberId;
         this.creationDate = LocalDateTime.now();

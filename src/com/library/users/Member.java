@@ -11,7 +11,6 @@ import com.library.utils.DateUtils;
  * Class Member dai dien cho Thanh vien thu vien (Ke thua tu User).
  */
 public class Member extends User {
-    private static final long serialVersionUID = 1L;
 
     private LocalDate dateOfMembership;
     private int totalBooksCheckedOut;
@@ -48,10 +47,6 @@ public class Member extends User {
         this.totalBooksCheckedOut = totalBooksCheckedOut;
     }
 
-    public boolean canCheckoutMoreBooks() {
-        return isActive() && totalBooksCheckedOut < Constants.MAX_BOOKS_ISSUED_TO_A_USER;
-    }
-
     public void incrementTotalBooksCheckedOut() {
         this.totalBooksCheckedOut++;
     }
@@ -65,6 +60,11 @@ public class Member extends User {
     @Override
     public String getRole() {
         return "Thanh vien";
+    }
+
+    @Override
+    public String getQuyenHan() {
+        return "Muon / tra / gia han / dat giu sach (toi da " + Constants.MAX_BOOKS_ISSUED_TO_A_USER + " cuon)";
     }
 
     @Override
