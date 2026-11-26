@@ -1,0 +1,13 @@
+# MA_VACH|ISBN|TUA_DE|TAC_GIA(;)|THE_LOAI|NXB|NGON_NGU|SO_TRANG|GIA|DINH_DANG|TRANG_THAI|CHI_DOC_TAI_CHO|NGAY_MUA|NGAY_XB|NGAY_MUON|HAN_TRA|SO_KE|VI_TRI_KE
+BC-CC-001|978-0132350884|Clean Code|Robert C. Martin|Cong nghe thong tin|Prentice Hall|Tieng Anh|464|450000|PAPERBACK|AVAILABLE|false|15/01/2023|01/08/2008|||1|Khu A - Tang 2 - Ke IT-01
+BC-CC-002|978-0132350884|Clean Code|Robert C. Martin|Cong nghe thong tin|Prentice Hall|Tieng Anh|464|520000|HARDCOVER|LOANED|false|15/01/2023|01/08/2008|20/11/2026|05/12/2026|1|Khu A - Tang 2 - Ke IT-01
+BC-EJ-001|978-0134685991|Effective Java (3rd Edition)|Joshua Bloch|Cong nghe thong tin|Addison-Wesley|Tieng Anh|412|600000|HARDCOVER|AVAILABLE|false|10/03/2023|06/01/2018|||1|Khu A - Tang 2 - Ke IT-01
+BC-EJ-002|978-0134685991|Effective Java (3rd Edition)|Joshua Bloch|Cong nghe thong tin|Addison-Wesley|Tieng Anh|412|600000|PAPERBACK|AVAILABLE|true|10/03/2023|06/01/2018|||1|Khu A - Tang 2 - Ke IT-01
+BC-DP-001|978-0201633610|Design Patterns|Erich Gamma;Richard Helm;Ralph Johnson;John Vlissides|Cong nghe thong tin|Addison-Wesley|Tieng Anh|395|550000|HARDCOVER|AVAILABLE|false|20/02/2023|31/10/1994|||2|Khu A - Tang 2 - Ke IT-02
+BC-DP-002|978-0201633610|Design Patterns|Erich Gamma;Richard Helm;Ralph Johnson;John Vlissides|Cong nghe thong tin|Addison-Wesley|Tieng Anh|395|480000|PAPERBACK|LOANED|false|20/02/2023|31/10/1994|05/11/2026|20/11/2026|2|Khu A - Tang 2 - Ke IT-02
+BC-VN-001|978-604-1-08888-8|Cho Toi Xin Mot Ve Di Tuoi Tho|Nguyen Nhat Anh|Van hoc Viet Nam|NXB Tre|Tieng Viet|210|95000|PAPERBACK|AVAILABLE|false|05/04/2023|01/01/2008|||3|Khu B - Tang 1 - Ke Van Hoc-01
+BC-VN-002|978-604-1-08888-8|Cho Toi Xin Mot Ve Di Tuoi Tho|Nguyen Nhat Anh|Van hoc Viet Nam|NXB Tre|Tieng Viet|210|120000|HARDCOVER|RESERVED|false|05/04/2023|01/01/2008|||3|Khu B - Tang 1 - Ke Van Hoc-01
+BC-CP-001|978-604-2-01234-5|Chi Pheo va cac tac pham tieu bieu|Nam Cao|Van hoc hien thuc|NXB Van Hoc|Tieng Viet|320|85000|PAPERBACK|AVAILABLE|false|12/05/2023|01/02/1941|||3|Khu B - Tang 1 - Ke Van Hoc-01
+BC-RF-001|978-0134757599|Refactoring|Martin Fowler|Cong nghe thong tin|Addison-Wesley|Tieng Anh|448|650000|HARDCOVER|LOANED|false|18/06/2023|20/11/2018|08/11/2026|23/11/2026|2|Khu A - Tang 2 - Ke IT-02
+BC-TEST-01|9780135166307|Grokking Algorithms|Aditya Bhargava|Thuat toan|Manning|Tieng Anh|320|280000|EBOOK|AVAILABLE|false|01/10/2026|01/05/2016|||2|Khu Demo - Ke 02
+BC-TEST-02|9781449373320|Designing Data-Intensive Applications|Martin Kleppmann|He thong du lieu|O Reilly|Tieng Anh|616|490000|HARDCOVER|AVAILABLE|false|01/10/2026|16/03/2017|||2|Khu Demo - Ke 02

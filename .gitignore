@@ -18,5 +18,12 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
-# Du lieu do chuong trinh tu tao khi chay (lan dau se tu sinh du lieu mau)
-data/
+# Chi dua 7 file du lieu demo len Git
+/data/*
+!/data/sach.txt
+!/data/thanhvien.txt
+!/data/thuthu.txt
+!/data/muontra.txt
+!/data/datcho.txt
+!/data/phat.txt
+!/data/thongbao.txt

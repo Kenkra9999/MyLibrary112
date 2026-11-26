@@ -1,0 +1,11 @@
+# MA_TT|MAT_KHAU|HO_TEN|EMAIL|SDT|DIA_CHI(duong;tp;tinh;zip;quoc gia)|SO_THE|MA_VACH_THE|NGAY_CAP_THE|THE_HOAT_DONG|TRANG_THAI|PHONG_BAN|NGAY_VAO_LAM
+LIB-101|admin123|Tran Thi Minh Trang|trang.tran@lms.edu.vn|0912345678|Cau Giay;Ha Noi;Ha Noi;700000;Viet Nam|LC-LIB-001|BC-CARD-LIB-01|01/01/2022|true|ACTIVE|Truong Ban Thu Vien|01/01/2022
+LIB-102|demo123|Nguyen Mai Khanh|khanh.lib@example.test|0000009201|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-102|BC-CARD-LIB-102|01/09/2026|true|ACTIVE|Phong phuc vu|01/09/2026
+LIB-103|demo123|Le Thanh Long|long.lib@example.test|0000009202|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-103|BC-CARD-LIB-103|01/09/2026|true|ACTIVE|Phong ky thuat|01/09/2026
+LIB-104|demo123|Pham Thu Uyen|uyen.lib@example.test|0000009203|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-104|BC-CARD-LIB-104|01/09/2026|true|ACTIVE|Phong tai lieu|01/09/2026
+LIB-105|demo123|Tran Huu Toan|toan.lib@example.test|0000009204|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-105|BC-CARD-LIB-105|01/09/2026|true|ACTIVE|Phong kho sach|01/09/2026
+LIB-106|demo123|Vo Hong Nhi|nhi.lib@example.test|0000009205|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-106|BC-CARD-LIB-106|01/09/2026|true|ACTIVE|Phong phuc vu|01/09/2026
+LIB-107|demo123|Nguyen Minh Duc|duc.lib@example.test|0000009206|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-107|BC-CARD-LIB-107|01/09/2026|true|ACTIVE|Phong ky thuat|01/09/2026
+LIB-108|demo123|Bui Kim Loan|loan.lib@example.test|0000009207|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-108|BC-CARD-LIB-108|01/09/2026|true|ACTIVE|Phong tai lieu|01/09/2026
+LIB-109|demo123|Do Quang Sang|sang.lib@example.test|0000009208|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-109|BC-CARD-LIB-109|01/09/2026|true|ACTIVE|Phong kho sach|01/09/2026
+LIB-110|demo123|Hoang Ngoc Lan|lan.lib@example.test|0000009209|Khu Demo;Ha Noi;;;Viet Nam|LC-LIB-110|BC-CARD-LIB-110|01/09/2026|true|ACTIVE|Phong phuc vu|01/09/2026

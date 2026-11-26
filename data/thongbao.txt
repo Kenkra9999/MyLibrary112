@@ -1,0 +1,13 @@
+# MA_TB|LOAI(Email/Buu dien)|MA_TV|THOI_GIAN|DA_GUI|NOI_NHAN(email hoac dia chi)|NOI_DUNG
+NOTIF-0003|Email|MB-1001|25/11/2026 21:09:57|false|an.nguyen@student.edu.vn|Chao mung ban Nguyen Van An tham gia thu vien! The TV: LC-5001
+NOTIF-0004|Buu dien|MB-1004|25/11/2026 21:09:57|false|Ninh Kieu;Can Tho;Can Tho;700000;Viet Nam|The thu vien LC-5004 da duoc gui toi dia chi cua ban.
+NOTIF-0005|Email|MB-1001|08/11/2026 09:00:00|true|an.nguyen@student.edu.vn|Da ghi nhan ban tra sach Clean Code.
+NOTIF-0006|Email|MB-1002|10/11/2026 09:00:00|true|bach.le@student.edu.vn|Vui long kiem tra han tra sach trong phieu muon.
+NOTIF-0007|Buu dien|MB-1004|11/11/2026 09:00:00|true|Ninh Kieu;Can Tho;Can Tho;700000;Viet Nam|Thu vien da cap nhat lich phuc vu.
+NOTIF-0008|Email|MB-1003|13/11/2026 09:00:00|true|ha.pham@student.edu.vn|Phieu dat giu cua ban da duoc cap nhat.
+NOTIF-0009|Email|MB-1001|15/11/2026 09:00:00|true|an.nguyen@student.edu.vn|Thu vien co tai lieu moi ve Java.
+NOTIF-0010|Buu dien|MB-1004|16/11/2026 09:00:00|true|Ninh Kieu;Can Tho;Can Tho;700000;Viet Nam|Nhac nho kiem tra lich su muon tra.
+NOTIF-0011|Email|MB-1003|25/11/2026 09:00:00|true|ha.pham@student.edu.vn|Sach da dat co the nhan tai quay thu thu.
+NOTIF-0012|Buu dien|MB-TEST-04|26/11/2026 09:00:00|true|Khu Demo;Can Tho;;;Viet Nam|Chao mung ban tham gia thu vien.
+NOTIF-0013|Email|MB-1002|26/11/2026 08:05:45|true|bach.le@student.edu.vn|Nhac nho: sach [Design Patterns] da qua han 6 ngay. Vui long tra som de tranh phat them!
+NOTIF-0014|Buu dien|MB-1004|26/11/2026 08:05:45|true|Ninh Kieu;Can Tho;Can Tho;700000;Viet Nam|Nhac nho: sach [Refactoring] da qua han 3 ngay. Vui long tra som de tranh phat them!

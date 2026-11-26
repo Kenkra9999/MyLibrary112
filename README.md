@@ -9,7 +9,7 @@ Dữ liệu được lưu trong **các lớp mảng đối tượng** (`DanhSach
 - Windows: nhấp đúp **`run.bat`** (tự biên dịch lại rồi chạy), hoặc chạy `.\run.ps1` trong PowerShell.
 - Chỉ biên dịch: `build.bat`.
 
-Lần chạy đầu tiên chương trình tự tạo dữ liệu mẫu vào `data/`. Các lần sau đọc lại từ đó. Muốn làm lại từ đầu: menu **9 → 5** (khôi phục dữ liệu mẫu), hoặc xóa thư mục `data/`.
+Bản tải từ GitHub có sẵn 7 file dữ liệu demo trong `data/`. Chương trình đọc các file này khi khởi động và ghi vào đó sau khi thay đổi dữ liệu. Nếu chưa có `data/sach.txt`, chương trình tạo bộ mẫu mặc định. Menu **9 → 5** tạo lại bộ mẫu mặc định theo ngày chạy.
 
 Tài khoản thủ thư mẫu: `LIB-101` / `admin123`. Thành viên mẫu: `MB-1001` → `MB-1004`.
 
@@ -41,6 +41,6 @@ src/com/library/
 ├── services/       Library (nghiệp vụ), TextFileStorageService (file text), SampleDataLoader, OperationResult
 ├── utils/          Constants, DateUtils, IdGenerator (static), NhapLieu
 └── enums/          BookStatus, BookFormat, AccountStatus, ReservationStatus
-data/               sach.txt, thanhvien.txt, thuthu.txt, muontra.txt, datcho.txt, phat.txt, thongbao.txt (tự sinh khi chạy)
+data/               sach.txt, thanhvien.txt, thuthu.txt, muontra.txt, datcho.txt, phat.txt, thongbao.txt (dữ liệu demo)
 docs/BAO_CAO_DO_AN.md   Báo cáo: đối chiếu 10 tiêu chí, sơ đồ lớp, câu hỏi vấn đáp, kịch bản demo
 ```

@@ -69,7 +69,7 @@ Tiền phạt (use case "Pay fine") không có mã R trong bài Viblo. Nhóm t�
 | `search` | `Search` *(interface)* | Chức năng tìm kiếm sách |
 | `services` | `Library` | Điều phối nghiệp vụ (mượn, trả, gia hạn, đặt giữ, phạt) |
 | | `TextFileStorageService` | Đọc/ghi toàn bộ dữ liệu ra file text |
-| | `SampleDataLoader` | Tạo dữ liệu mẫu lần chạy đầu |
+| | `SampleDataLoader` | Tạo bộ mẫu mặc định khi chưa có dữ liệu hoặc khi chọn khôi phục |
 | | `OperationResult` | Kết quả nghiệp vụ (thành công/thất bại + thông báo) |
 | `utils` | `Constants`, `DateUtils`, `IdGenerator`, `NhapLieu` | Hằng số, ngày tháng, sinh mã, nhập liệu có kiểm tra |
 | `enums` | `BookStatus`, `BookFormat`, `AccountStatus`, `ReservationStatus` | Trạng thái, định dạng |
@@ -115,7 +115,7 @@ Mỗi lớp con chỉ cài đặt phần riêng: mã của phần tử (`layMa`)
 
 ## 4. ĐỌC VÀ GHI FILE TEXT (1 điểm)
 
-- **Khi khởi động:** nếu đã có `data/sach.txt` thì đọc cả 7 file vào 7 mảng. Lần chạy đầu tiên thì tạo dữ liệu mẫu và ghi ra file.
+- **Khi khởi động:** đọc 7 file demo có sẵn trong `data/` vào 7 mảng. Nếu thiếu `data/sach.txt`, chương trình tạo bộ mẫu mặc định và ghi ra file.
 - **Khi chạy:** sau mỗi thao tác làm thay đổi dữ liệu (thêm, sửa, xóa, mượn, trả…), chương trình ghi lại toàn bộ file.
 - **Định dạng:** mỗi dòng là một đối tượng, các trường cách nhau bằng dấu `|`. Dòng bắt đầu bằng `#` là dòng tiêu đề. Ví dụ `data/thanhvien.txt`:
   ```
@@ -325,7 +325,7 @@ Trong constructor lớp con (`super(id, password, person, card, status)` trong `
 
 **Chạy:** nhấp đúp `run.bat`, hoặc chạy `.\run.ps1` trong PowerShell. Script luôn biên dịch lại rồi mới chạy.
 
-> Dữ liệu mẫu tính ngày theo **ngày chạy lần đầu**. Trước buổi bảo vệ nên chọn **9 → 5** (khôi phục dữ liệu mẫu) để các ví dụ quá hạn bên dưới đúng như mô tả.
+> Bộ demo đi kèm có ngày mượn và hạn trả cố định. Trước buổi bảo vệ, chọn **9 → 5** để tạo bộ mẫu mặc định theo ngày chạy và tái hiện các ví dụ quá hạn bên dưới.
 
 | Bước | Thao tác | Kết quả mong đợi |
 | :---: | :--- | :--- |
